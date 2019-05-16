@@ -3,13 +3,17 @@ pragma solidity >=0.5.0 <0.6.0;
 contract Bankshot {
    address public owner;
    uint256 public ethVig;
-   uint256 public minEth;
+   uint256 public minEthCollateral;
 
     constructor(uint256 _ethVig,
-                uint256 _minEth) public {
+                uint256 _minEthCollateral) public {
 
         owner = msg.sender;
         ethVig = _ethVig;
-        minEth = _minEth;
+        minEthCollateral = _minEthCollateral;
+    }
+
+    function minEthPayable() public view returns (uint256) {
+        return ethVig + minEthCollateral;
     }
 }
