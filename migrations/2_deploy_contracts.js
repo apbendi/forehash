@@ -1,5 +1,5 @@
-const SimpleStorage = artifacts.require("Bankshot");
+const Bankshot = artifacts.require("Bankshot");
 
 module.exports = function(deployer) {
-  deployer.deploy(SimpleStorage);
+  deployer.deploy(Bankshot, 0);
 };
