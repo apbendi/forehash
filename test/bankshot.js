@@ -48,10 +48,36 @@ contract("Bankshot", accounts => {
     assert.equal(newVig.toString(10), vigResult.toString(10), "Failed to update the ETH vig");
   });
 
+  it("should not let a non-owner update the eth vig", async () => {
+    let vig = utils.toWei('1000', 'ether');
+    var revertReason = 'none';
+
+    try {
+      await bankshotInstance.setEthVig(vig, {from: accounts[1]});
+    } catch (error) {
+      revertReason = error.reason;
+    }
+
+    assert.equal(revertReason, 'ONLY_OWNER', "Failed to revert non-owner vig update for correct reason");
+  });
+
   it("should let the owner update the min eth collateral", async() => {
     await bankshotInstance.setMinEthCollateral(newMinEthCollateral, {from: ownerAddr});
     let minResult = await bankshotInstance.minEthCollateral();
 
     assert.equal(newMinEthCollateral.toString(10), minResult.toString(10), "Failed to update the min ETH collateral");
+  });
+
+  it("should not let a non-owner update the eth min collateral", async () => {
+    let collateral = utils.toWei('0', 'ether');
+    var revertReason = 'none';
+
+    try {
+      await bankshotInstance.setMinEthCollateral(collateral, {from: accounts[2]});
+    } catch (error) {
+      revertReason = error.reason;
+    }
+
+    assert.equal(revertReason, 'ONLY_OWNER', "Failed to revert non-owner eth collager update for correct reason");
   });
 });

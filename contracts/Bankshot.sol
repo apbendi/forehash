@@ -17,11 +17,16 @@ contract Bankshot {
         return ethVig + minEthCollateral;
     }
 
-    function setEthVig(uint256 _newVig) public {
+    function setEthVig(uint256 _newVig) public onlyOwner {
         ethVig = _newVig;
     }
 
-    function setMinEthCollateral(uint256 _newMinEthCollateral) public {
+    function setMinEthCollateral(uint256 _newMinEthCollateral) public onlyOwner {
         minEthCollateral = _newMinEthCollateral;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "ONLY_OWNER");
+        _;
     }
 }
