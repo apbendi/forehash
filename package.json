@@ -1,25 +1,25 @@
 {
-  "name": "drizzle-box",
-  "version": "1.0.0",
-  "description": "",
+  "name": "bankshot",
+  "version": "0.1.0",
+  "description": "Hash based commit/reveal predictions with skin in the game.",
   "main": "truffle-config.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "truffle test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/truffle-box/drizzle-box.git"
+    "url": "git+https://github.com/apbendi/bankshot.git"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/truffle-box/drizzle-box/issues"
+    "url": "https://github.com/apbendi/bankshot/issues"
   },
-  "homepage": "https://github.com/truffle-box/drizzle-box#readme",
+  "homepage": "https://github.com/apbendi/bankshot",
   "dependencies": {
     "openzeppelin-solidity": "^2.1.1"
   }

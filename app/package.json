@@ -1,5 +1,5 @@
 {
-  "name": "app",
+  "name": "bankshot-ui",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
