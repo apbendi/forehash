@@ -80,4 +80,14 @@ contract("Bankshot", accounts => {
 
     assert.equal(revertReason, 'ONLY_OWNER', "Failed to revert non-owner eth collager update for correct reason");
   });
+
+  it("should calculate the updated minimum payaple ETH", async () => {
+    let callResult = await bankshotInstance.minEthPayable();
+
+    let vig = new BN(newVig);
+    let collateral = new BN(newMinEthCollateral);
+    let expectedValue = vig.add(collateral);
+
+    assert.equal(expectedValue.toString(10), callResult.toString(10), "Failed to calculate updated min payable ETH");
+  });
 });
