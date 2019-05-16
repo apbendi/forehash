@@ -7,12 +7,12 @@ contract("Bankshot", accounts => {
   var bankshotInstance;
   let ownerAddr = accounts[0];
   let initVig = utils.toWei('0.01', 'ether');
-  let initMinEthCollateral = utils.toWei('.03', 'ether');
+  let initMinEthDeposit = utils.toWei('.03', 'ether');
   let newVig = utils.toWei('0.02', 'ether');
-  let newMinEthCollateral = utils.toWei('0.05', 'ether');
+  let newMinEthDeposit = utils.toWei('0.05', 'ether');
 
   it("should deploy", async () => {
-    bankshotInstance = await Bankshot.new(initVig, initMinEthCollateral, { from: ownerAddr, });
+    bankshotInstance = await Bankshot.new(initVig, initMinEthDeposit, { from: ownerAddr, });
     assert(bankshotInstance.address.startsWith("0x"), "Deployed contract address not found");
   });
 
@@ -26,17 +26,17 @@ contract("Bankshot", accounts => {
     assert.equal(callResult, initVig, "Failed to set initial ETH vig");
   });
 
-  it("should have the ethereum min collateral set to the constructor param", async() => {
-    let callResult = await bankshotInstance.minEthCollateral();
-    assert.equal(callResult, initMinEthCollateral, "Failed to set initial ETH collateral");
+  it("should have the ethereum min deposit set to the constructor param", async() => {
+    let callResult = await bankshotInstance.minEthDeposit();
+    assert.equal(callResult, initMinEthDeposit, "Failed to set initial ETH deposit");
   });
 
   it("should properly calculate the minimum payable ETH", async() => {
     let callResult = await bankshotInstance.minEthPayable();
     
     let vig = new BN(initVig);
-    let collateral = new BN(initMinEthCollateral);
-    let expectedValue = vig.add(collateral);
+    let deposit = new BN(initMinEthDeposit);
+    let expectedValue = vig.add(deposit);
 
     assert.equal(callResult.toString(10), expectedValue.toString(10), "Failed to calculate expected ETH payable");
   });
@@ -61,19 +61,19 @@ contract("Bankshot", accounts => {
     assert.equal(revertReason, 'ONLY_OWNER', "Failed to revert non-owner vig update for correct reason");
   });
 
-  it("should let the owner update the min eth collateral", async() => {
-    await bankshotInstance.setMinEthCollateral(newMinEthCollateral, {from: ownerAddr});
-    let minResult = await bankshotInstance.minEthCollateral();
+  it("should let the owner update the min eth deposit", async() => {
+    await bankshotInstance.setMinEthDeposit(newMinEthDeposit, {from: ownerAddr});
+    let minResult = await bankshotInstance.minEthDeposit();
 
-    assert.equal(newMinEthCollateral.toString(10), minResult.toString(10), "Failed to update the min ETH collateral");
+    assert.equal(newMinEthDeposit.toString(10), minResult.toString(10), "Failed to update the min ETH deposit");
   });
 
-  it("should not let a non-owner update the eth min collateral", async () => {
-    let collateral = utils.toWei('0', 'ether');
+  it("should not let a non-owner update the eth min deposit", async () => {
+    let deposit = utils.toWei('0', 'ether');
     var revertReason = 'none';
 
     try {
-      await bankshotInstance.setMinEthCollateral(collateral, {from: accounts[2]});
+      await bankshotInstance.setMinEthDeposit(deposit, {from: accounts[2]});
     } catch (error) {
       revertReason = error.reason;
     }
@@ -85,8 +85,8 @@ contract("Bankshot", accounts => {
     let callResult = await bankshotInstance.minEthPayable();
 
     let vig = new BN(newVig);
-    let collateral = new BN(newMinEthCollateral);
-    let expectedValue = vig.add(collateral);
+    let deposit = new BN(newMinEthDeposit);
+    let expectedValue = vig.add(deposit);
 
     assert.equal(expectedValue.toString(10), callResult.toString(10), "Failed to calculate updated min payable ETH");
   });
