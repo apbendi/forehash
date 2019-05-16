@@ -16,4 +16,12 @@ contract Bankshot {
     function minEthPayable() public view returns (uint256) {
         return ethVig + minEthCollateral;
     }
+
+    function setEthVig(uint256 _newVig) public {
+        ethVig = _newVig;
+    }
+
+    function setMinEthCollateral(uint256 _newMinEthCollateral) public {
+        minEthCollateral = _newMinEthCollateral;
+    }
 }

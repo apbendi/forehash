@@ -8,6 +8,8 @@ contract("Bankshot", accounts => {
   let ownerAddr = accounts[0];
   let initVig = utils.toWei('0.01', 'ether');
   let initMinEthCollateral = utils.toWei('.03', 'ether');
+  let newVig = utils.toWei('0.02', 'ether');
+  let newMinEthCollateral = utils.toWei('0.05', 'ether');
 
   it("should deploy", async () => {
     bankshotInstance = await Bankshot.new(initVig, initMinEthCollateral, { from: ownerAddr, });
@@ -37,5 +39,19 @@ contract("Bankshot", accounts => {
     let expectedValue = vig.add(collateral);
 
     assert.equal(callResult.toString(10), expectedValue.toString(10), "Failed to calculate expected ETH payable");
+  });
+
+  it("should let the owner update the eth vig", async () => {
+    await bankshotInstance.setEthVig(newVig, {from: ownerAddr});
+    let vigResult = await bankshotInstance.ethVig();
+
+    assert.equal(newVig.toString(10), vigResult.toString(10), "Failed to update the ETH vig");
+  });
+
+  it("should let the owner update the min eth collateral", async() => {
+    await bankshotInstance.setMinEthCollateral(newMinEthCollateral, {from: ownerAddr});
+    let minResult = await bankshotInstance.minEthCollateral();
+
+    assert.equal(newMinEthCollateral.toString(10), minResult.toString(10), "Failed to update the min ETH collateral");
   });
 });
