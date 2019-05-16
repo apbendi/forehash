@@ -17,22 +17,22 @@ contract("Bankshot", accounts => {
   });
 
   it("should have an owner property initialized to the deployer", async () => {
-    let callResult = await bankshotInstance.owner.call();
+    let callResult = await bankshotInstance.owner();
     assert.equal(callResult, ownerAddr, "Unexpected contract owner");
   });
 
   it("should have the ethereum vig set to the constructor param", async () => {
-    let callResult = await bankshotInstance.ethVig.call();
+    let callResult = await bankshotInstance.ethVig();
     assert.equal(callResult, initVig, "Failed to set initial ETH vig");
   });
 
   it("should have the ethereum min collateral set to the constructor param", async() => {
-    let callResult = await bankshotInstance.minEthCollateral.call();
+    let callResult = await bankshotInstance.minEthCollateral();
     assert.equal(callResult, initMinEthCollateral, "Failed to set initial ETH collateral");
   });
 
   it("should properly calculate the minimum payable ETH", async() => {
-    let callResult = await bankshotInstance.minEthPayable.call();
+    let callResult = await bankshotInstance.minEthPayable();
     
     let vig = new BN(initVig);
     let collateral = new BN(initMinEthCollateral);
