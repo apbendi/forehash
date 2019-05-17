@@ -17,14 +17,23 @@ async function assertRevert(txPromise, expectedReason, failureMessage) {
   assert.equal(expectedReason, reason, "WRONG REASON: " + failureMessage);
 }
 
+function addWeiStrings(...weiStrings) {
+  return weiStrings
+          .map( ws => new BN(ws) )
+          .reduce( (acc, curr) => acc.add(curr) );
+}
+
 contract("Bankshot", accounts => {
 
   var bankshotInstance;
   let ownerAddr = accounts[0];
+  let user1Addr = accounts[1];
+  let user2Addr = accounts[2];
   let initVig = utils.toWei('0.01', 'ether');
   let initMinEthDeposit = utils.toWei('.03', 'ether');
   let newVig = utils.toWei('0.02', 'ether');
   let newMinEthDeposit = utils.toWei('0.05', 'ether');
+
 
   it("should deploy", async () => {
     bankshotInstance = await Bankshot.new(initVig, initMinEthDeposit, { from: ownerAddr, });
@@ -92,5 +101,81 @@ contract("Bankshot", accounts => {
     let expectedValue = vig.add(deposit);
 
     assert.equal(expectedValue.toString(10), callResult.toString(10), "Failed to calculate updated min payable ETH");
+  });
+
+  it("should let a user submit a hash with min payment", async () => {
+    let string = "Hello World";
+    let hash = utils.soliditySha3({type: 'string', value: string});
+    let txValue = addWeiStrings(newVig, newMinEthDeposit);
+    
+    await bankshotInstance.submitHash(hash, {from: user1Addr, value: txValue});
+
+    let hashes = await bankshotInstance.hashesForAddress(user1Addr);
+
+    assert.equal(hashes.length, 1, "Unexpected hash count for user");
+    assert(hashes.includes(hash), "Submitted hash not included in results");
+  });
+
+  it("should let another user submit a hash with above min payment", async () => {
+    let string = "Hello, Cruel World";
+    let hash = utils.soliditySha3({type: 'string', value: string});
+    let txValue = addWeiStrings(newVig, newMinEthDeposit, utils.toWei('1', 'ether'));
+    
+    await bankshotInstance.submitHash(hash, {from: user2Addr, value: txValue});
+
+    let hashes = await bankshotInstance.hashesForAddress(user2Addr);
+
+    assert.equal(hashes.length, 1, "Unexpected hash count for user");
+    assert(hashes.includes(hash), "Submitted hash not included in results");
+  });
+
+  it("should not let a user submit without a payment", async () => {
+    let string = "Something to hash";
+    let hash = utils.soliditySha3({type: 'string', value: string});
+
+    let txPromise = bankshotInstance.submitHash(hash, {from: user2Addr});
+
+    await assertRevert(txPromise, 'INSUFFICIENT_FUNDS', "Failed to revert non-paying submission");
+  });
+
+  it("should not let a user submit with less than minimum payment", async () => {
+    let string = "Something to hash";
+    let hash = utils.soliditySha3({type: 'string', value: string});
+    let txValue = addWeiStrings(newMinEthDeposit);
+
+    let txPromise = bankshotInstance.submitHash(hash, {from: user2Addr, value: txValue});
+
+    await assertRevert(txPromise, 'INSUFFICIENT_FUNDS', "Failed to revert submission w/ insufficient payment");
+  });
+
+  it("should or should not let a user submit and reveal a string", async () => {
+    let string = "Hello Again";
+    let hash = utils.soliditySha3({type: 'string', value: string});
+    let txValue = addWeiStrings(newVig, newMinEthDeposit);
+
+    await bankshotInstance.submitHash(hash, {from: user1Addr, value: txValue});
+    let hashes = await bankshotInstance.hashesForAddress(user1Addr);
+
+    assert.equal(hashes.length, 2, "Unexpected hash count for user");
+    assert(hashes.includes(hash), "Submitted hash not included in results");
+
+    let wrongRevealTx = bankshotInstance.revealSubmission(1, utils.toHex(string + "!!"), {from: user1Addr});
+    await assertRevert(wrongRevealTx, "INVALID_REVEAL", "Revealed when it shouldn't have");
+
+    await bankshotInstance.revealSubmission(1, utils.toHex(string), {from: user1Addr});
+  });
+
+  it("should not show a revelation for a submission that hasn't been revealed", async () => {
+    let revelation = await bankshotInstance.revelationForSub(user2Addr, 0);
+    assert.equal(revelation, null, "Returned a non-null value for an unrevealed submission");
+  });
+
+  it("should return the reveal string for a previously revealed submission", async () => {
+    let expectedString = "Hello Again";
+
+    let revelationBytes = await bankshotInstance.revelationForSub(user1Addr, 1);
+    let revelationString = utils.hexToUtf8(revelationBytes);
+
+    assert.equal(revelationString, expectedString, "Failed to return the revelation string");
   });
 });
