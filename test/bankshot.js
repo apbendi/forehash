@@ -2,6 +2,21 @@ const Bankshot = artifacts.require("Bankshot");
 const utils = web3.utils;
 const BN = utils.BN;
 
+async function assertRevert(txPromise, expectedReason, failureMessage) {
+  var reverted = false;
+  var reason = "";
+
+  try {
+    await txPromise;
+  } catch (error) {
+    reverted = true;
+    reason = error.reason;
+  }
+
+  assert(reverted, failureMessage);
+  assert.equal(expectedReason, reason, "WRONG REASON: " + failureMessage);
+}
+
 contract("Bankshot", accounts => {
 
   var bankshotInstance;
@@ -50,15 +65,9 @@ contract("Bankshot", accounts => {
 
   it("should not let a non-owner update the eth vig", async () => {
     let vig = utils.toWei('1000', 'ether');
-    var revertReason = 'none';
+    let txPromise =  bankshotInstance.setEthVig(vig, {from: accounts[1]});
 
-    try {
-      await bankshotInstance.setEthVig(vig, {from: accounts[1]});
-    } catch (error) {
-      revertReason = error.reason;
-    }
-
-    assert.equal(revertReason, 'ONLY_OWNER', "Failed to revert non-owner vig update for correct reason");
+    await assertRevert(txPromise, "ONLY_OWNER", "Failed to revert non-owner vig update");
   });
 
   it("should let the owner update the min eth deposit", async() => {
@@ -70,15 +79,9 @@ contract("Bankshot", accounts => {
 
   it("should not let a non-owner update the eth min deposit", async () => {
     let deposit = utils.toWei('0', 'ether');
-    var revertReason = 'none';
+    let txPromise = bankshotInstance.setMinEthDeposit(deposit, {from: accounts[2]});
 
-    try {
-      await bankshotInstance.setMinEthDeposit(deposit, {from: accounts[2]});
-    } catch (error) {
-      revertReason = error.reason;
-    }
-
-    assert.equal(revertReason, 'ONLY_OWNER', "Failed to revert non-owner eth collager update for correct reason");
+    await assertRevert(txPromise, "ONLY_OWNER", "Failed to revert non-owner eth deposit update");
   });
 
   it("should calculate the updated minimum payaple ETH", async () => {
