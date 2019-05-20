@@ -8,6 +8,7 @@ contract Bankshot {
    struct Submission {
        bytes32 sHash;
        bytes revelation;
+       uint256 deposit;
    }
 
    mapping(address => Submission[]) submissions;
@@ -33,7 +34,8 @@ contract Bankshot {
     }
 
     function submitHash(bytes32 _hash) public payable paysMin {
-        submissions[msg.sender].push(Submission({ sHash: _hash, revelation: ""}));
+        uint256 deposit = msg.value - ethVig;
+        submissions[msg.sender].push(Submission({ sHash: _hash, revelation: "", deposit: deposit}));
     }
 
     function hashesForAddress(address _address) public view returns(bytes32[] memory) {
@@ -53,11 +55,14 @@ contract Bankshot {
 
     function revealSubmission(uint _subId, bytes memory _revelation) public {
         Submission storage sub = submissions[msg.sender][_subId];
+        require(sub.revelation.length == 0, "ALREADY_REVEALED");
 
         bytes32 revealHash = keccak256(abi.encodePacked(_revelation));
         require(revealHash == sub.sHash, "INVALID_REVEAL");
 
         sub.revelation = _revelation;
+
+        msg.sender.transfer(sub.deposit);
     }
 
     modifier onlyOwner() {
