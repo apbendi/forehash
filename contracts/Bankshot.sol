@@ -13,6 +13,12 @@ contract Bankshot {
 
    mapping(address => Submission[]) submissions;
 
+   event Revelation(
+       address indexed user,
+       uint256 indexed subID,
+       bytes revelation
+   );
+
     constructor(uint256 _ethVig,
                 uint256 _minEthDeposit) public {
 
@@ -53,14 +59,15 @@ contract Bankshot {
         return submissions[_address][_subID].revelation;
     }
 
-    function revealSubmission(uint _subId, bytes memory _revelation) public {
-        Submission storage sub = submissions[msg.sender][_subId];
+    function revealSubmission(uint _subID, bytes memory _revelation) public {
+        Submission storage sub = submissions[msg.sender][_subID];
         require(sub.revelation.length == 0, "ALREADY_REVEALED");
 
         bytes32 revealHash = keccak256(abi.encodePacked(_revelation));
         require(revealHash == sub.sHash, "INVALID_REVEAL");
 
         sub.revelation = _revelation;
+        emit Revelation(msg.sender, _subID, _revelation);
 
         msg.sender.transfer(sub.deposit);
     }

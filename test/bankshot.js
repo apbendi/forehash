@@ -198,7 +198,10 @@ contract("Bankshot", accounts => {
   it("should return the reveal string for a previously revealed submission", async () => {
     let expectedString = "Hello Again";
 
-    let revelationBytes = await bankshotInstance.revelationForSub(user1Addr, 1);
+    let events = await bankshotInstance.getPastEvents('Revelation', {filter: {user: user1Addr, subID: 1}});
+    assert(events.length === 1, "Didn't find revelation event, or found too many");
+
+    let revelationBytes = await events[0].returnValues['revelation'];
     let revelationString = utils.hexToUtf8(revelationBytes);
 
     assert.equal(revelationString, expectedString, "Failed to return the revelation string");
