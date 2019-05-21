@@ -228,4 +228,50 @@ contract("Bankshot", accounts => {
 
     assert.equal(extraDeposit, amountReturned.toString(10), "Failed to return a user's extra deposit");
   });
+
+  it("should not let a non-owner withdraw the vig balance", async () => {
+    let withdrawTx = bankshotInstance.withdrawVig(newVig.toBN(), {from: user2Addr});
+
+    await assertRevert(withdrawTx, 'ONLY_OWNER', "Allowed a non-owner to withdraw the vig balance");
+  });
+
+  it("should not allow the owner to withdraw more than the vig balance", async () => {
+    let withdrawAmount = utils.toWei('1', 'ether').toBN();
+    let withdrawTx = bankshotInstance.withdrawVig(withdrawAmount, {from: ownerAddr});
+
+    await assertRevert(withdrawTx, 'WITHDRAW_LIMIT', "Allowed the owner to withdraw beyond the vig balance");
+  });
+
+  it("should allow the owner to withdraw less than the total vig balance", async () => {
+    let withdrawAmount = newVig.toBN();
+    let initBalance = ( await web3.eth.getBalance(ownerAddr) ).toBN();
+
+    let result =  await bankshotInstance.withdrawVig(withdrawAmount, {from: ownerAddr});
+    let gasCost = await getGasCost(result.receipt);
+
+    let postBalance = ( await web3.eth.getBalance(ownerAddr) ).toBN();
+    let amountReceived = postBalance.add(gasCost).sub(initBalance);
+
+    assert.equal(withdrawAmount.toString(10), amountReceived.toString(10), "Failed to withdraw from the vig balance");
+  });
+
+  it("should account for the previous withdrawls from the vig balance", async () => {
+    let withdrawAmount = newVig.toBN().mul("3".toBN()); // The peak vig balance before previous withdraw
+    let withdrawTx = bankshotInstance.withdrawVig(withdrawAmount, {from: ownerAddr});
+
+    await assertRevert(withdrawTx, 'WITHDRAW_LIMIT', "Failed to account for previous owner vig withdraws")
+  });
+
+  it("should allow for the owner to withdraw the full vig balance", async () => {
+    let withdrawAmount = newVig.toBN().mul("2".toBN());
+    let initBalance = ( await web3.eth.getBalance(ownerAddr) ).toBN();
+
+    let result =  await bankshotInstance.withdrawVig(withdrawAmount, {from: ownerAddr});
+    let gasCost = await getGasCost(result.receipt);
+
+    let postBalance = ( await web3.eth.getBalance(ownerAddr) ).toBN();
+    let amountReceived = postBalance.add(gasCost).sub(initBalance);
+
+    assert.equal(withdrawAmount.toString(10), amountReceived.toString(10), "Failed to withdraw the full vig balance");
+  });
 });

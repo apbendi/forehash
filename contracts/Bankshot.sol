@@ -1,7 +1,8 @@
 pragma solidity >=0.5.0 <0.6.0;
 
 contract Bankshot {
-   address public owner;
+   address payable public owner;
+   uint256 private vigBalance;
    uint256 public ethVig;
    uint256 public minEthDeposit;
 
@@ -39,9 +40,17 @@ contract Bankshot {
         minEthDeposit = _newMinEthDeposit;
     }
 
+    function withdrawVig(uint256 _amount) public onlyOwner {
+        require(_amount <= vigBalance, "WITHDRAW_LIMIT");
+
+        vigBalance -= _amount;
+        owner.transfer(_amount);
+    }
+
     function submitHash(bytes32 _hash) public payable paysMin {
         uint256 deposit = msg.value - ethVig;
         submissions[msg.sender].push(Submission({ sHash: _hash, deposit: deposit, isRevealed: false}));
+        vigBalance += (msg.value - deposit);
     }
 
     function hashesForAddress(address _address) public view returns(bytes32[] memory) {
