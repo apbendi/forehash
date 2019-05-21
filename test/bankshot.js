@@ -178,8 +178,8 @@ contract("Bankshot", accounts => {
   });
 
   it("should not show a revelation for a submission that hasn't been revealed", async () => {
-    let revelation = await bankshotInstance.revelationForSub(user2Addr, 0);
-    assert.equal(revelation, null, "Returned a non-null value for an unrevealed submission");
+    let events = await bankshotInstance.getPastEvents('Revelation', {filter: {user: user2Addr, subID: 0}});
+    assert(events.length === 0, "Returned a revelation event for an unrevealed submission");
   });
 
   it("should pay a user back for a correct revelation", async () => {
