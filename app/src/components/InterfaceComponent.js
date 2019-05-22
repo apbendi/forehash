@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-
 import {
   AccountData,
   ContractData,
   ContractForm,
 } from "drizzle-react-components";
+import SubmissionForm from './SubmissionForm';
 
 class InterfaceComponent extends Component {
 
@@ -17,7 +17,7 @@ class InterfaceComponent extends Component {
   render() {
     return (
       <div className="App">
-        Hello {this.props.accounts[0]}
+        <SubmissionForm />
       </div>
     );
   }
