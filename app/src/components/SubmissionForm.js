@@ -93,14 +93,20 @@ class SubmissionForm extends Component {
             <div>
                 <h2>New Submission</h2>
                 <form>
-                    <textarea placeholder="Your prediction..." 
-                                value={this.state.predictionInput} 
-                                onChange={this.handleInputChange} />
-                    <br />
+                    <div className="form-group">
+                        <textarea placeholder="Your submission text"
+                                    className="form-control"
+                                    value={this.state.predictionInput} 
+                                    onChange={this.handleInputChange} />
+                        <br />
 
-                    <button type="button" disabled={!isButtonEnabled} onClick={this.handleSubmit}>
-                        Hash & Submit
-                    </button>
+                        <button type="button"
+                                className="btn btn-default"
+                                disabled={!isButtonEnabled} 
+                                onClick={this.handleSubmit}>
+                            Hash & Submit
+                        </button>
+                    </div>
                 </form>
             </div>
         );
