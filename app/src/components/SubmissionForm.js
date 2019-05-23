@@ -62,7 +62,6 @@ class SubmissionForm extends Component {
         }
 
         let sum = this.utils.toBN(ethVig).add(this.utils.toBN(minEthDeposit));
-        console.log(sum.toString(10));
 
         return sum;
     }

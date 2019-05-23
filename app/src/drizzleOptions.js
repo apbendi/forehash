@@ -10,7 +10,12 @@ const options = {
   },
   contracts: [Bankshot],
   events: {
-    
+    Bankshot: [
+                {
+                  eventName: "Revelation", 
+                  eventOptions: {fromBlock: 0},
+                },
+              ],
   },
   polls: {
     accounts: 1500,
