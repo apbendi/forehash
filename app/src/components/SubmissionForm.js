@@ -92,6 +92,7 @@ class SubmissionForm extends Component {
 
         return (
             <div>
+                <h2>New Submission</h2>
                 <form>
                     <textarea placeholder="Your prediction..." 
                                 value={this.state.predictionInput} 
