@@ -139,6 +139,10 @@ class SubmissionsList extends Component {
                     </div>
                 );
             } else {
+                let selectedHash = this.hashes()[this.state.selectedSubID];
+                let revealInputHash = this.utils.soliditySha3({type: 'string', value: this.state.revealInput});
+                let isCorrectRevelation = (selectedHash === revealInputHash);
+
                 revealInterface = (
                     <form>
                         <h2>Reveal Submission</h2>
@@ -149,7 +153,7 @@ class SubmissionsList extends Component {
                             <br />
 
                             <button className="btn btn-default"
-                                    disabled={this.state.revealInput.length === 0}
+                                    disabled={!isCorrectRevelation}
                                     onClick={this.handleRevealClick}>
                                 Reveal This Submission
                             </button>
