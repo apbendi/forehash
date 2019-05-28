@@ -3,10 +3,8 @@ import PropTypes from 'prop-types';
 
 class PredictionForm extends Component {
 
-    constructor(props, context) {
+    constructor(props) {
         super(props);
-
-        this.utils = context.drizzle.web3.utils;
 
         this.state = {
             predictionInput: "",
@@ -82,10 +80,6 @@ class PredictionForm extends Component {
             </div>
         )
     }
-}
-
-PredictionForm.contextTypes = {
-    drizzle: PropTypes.object,
 }
 
 export default PredictionForm;
