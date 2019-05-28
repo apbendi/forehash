@@ -70,7 +70,13 @@ class SubmissionsList extends Component {
             return [];
         }
 
-        return this.props.bankshotState.hashesForAddress[this.state.hashesKey].value;
+        let contractValue = this.props.bankshotState.hashesForAddress[this.state.hashesKey].value;
+
+        if(!contractValue) {
+            return [];
+        }
+
+        return contractValue;
     }
 
     revelations() {
