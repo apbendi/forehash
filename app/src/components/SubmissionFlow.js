@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import PredictionForm from './PredictionForm';
 import BackupPrediction from './BackupPrediction';
+import ConfirmForm from './ConfirmForm';
 
 class SubmissionFlow extends Component {
 
@@ -14,11 +15,13 @@ class SubmissionFlow extends Component {
             flowStep: "PREDICTION",
             predictionText: "",
             depositAmount: "",
-            randomSalt: this.generateSalt(),            
+            randomSalt: this.generateSalt(),
+            confirmError: null,
         }
 
         this.predictionCallback = this.predictionCallback.bind(this);
         this.backupContinue = this.backupContinue.bind(this);
+        this.backupConfirm = this.backupConfirm.bind(this);
     }
 
     generateSalt(length=8) {
@@ -43,6 +46,19 @@ class SubmissionFlow extends Component {
         this.setState({
             flowStep: "CONFIRM", 
         });
+    }
+
+    backupConfirm(confirmText) {
+        console.log("Hello world");
+        if (confirmText === this.state.randomSalt) {
+            this.setState({
+               flowStep: "PUBLISH",
+            });
+        } else {
+            this.setState({
+                confirmError: "Text entered does not match",
+            });
+        }
     }
 
     render() {
@@ -70,9 +86,20 @@ class SubmissionFlow extends Component {
                         onContinue={this.backupContinue}
                         />
                 );
+
                 break;
             case "CONFIRM":
                 header = "Confirm Backup";
+
+                stepComponent = (
+                    <ConfirmForm
+                        onConfirm={this.backupConfirm}
+                        error={this.state.confirmError} />
+                );
+
+                break;
+            case "PUBLISH":
+                header = "Publish Hash";
                 break;
             default:
                 throw "Illegal State";
