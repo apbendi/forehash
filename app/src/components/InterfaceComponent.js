@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import SubmissionForm from './SubmissionForm';
 import SubmissionsList from './SubmissionsList';
+import SubmissionFlow from './SubmissionFlow';
 
 class InterfaceComponent extends Component {
 
@@ -13,8 +13,8 @@ class InterfaceComponent extends Component {
   render() {
     return (
       <div className="App">
-        <SubmissionForm />
-        <SubmissionsList />
+        <SubmissionFlow />
+        {/*<SubmissionsList />*/}
       </div>
     );
   }
