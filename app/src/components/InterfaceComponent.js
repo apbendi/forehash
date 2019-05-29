@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import SubmissionsList from './SubmissionsList';
-import SubmissionFlow from './SubmissionFlow';
+import SubmissionFlow from './submission/SubmissionFlow';
 
 class InterfaceComponent extends Component {
 
