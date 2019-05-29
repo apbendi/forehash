@@ -38,7 +38,11 @@ class PredictionForm extends Component {
     }
 
     render() {
-        let isButtonEnabled = (this.props.isEnabled && this.state.predictionInput.length > 5);
+        let validationResponse = this.props.amountValidator(this.state.depositAmount);
+        let isButtonEnabled = this.props.isEnabled &&
+                                this.state.predictionInput.length > 5 &&
+                                this.state.depositAmount.length > 0 &&
+                                validationResponse === "";
 
         return (
             <div>
@@ -68,6 +72,10 @@ class PredictionForm extends Component {
                                 onChange={this.handleDepositChange}
                                 />
 
+                        <small>
+                            {validationResponse}
+                        </small>
+
                         <br />
 
                         <button type="button"
@@ -83,6 +91,7 @@ class PredictionForm extends Component {
 }
 
 PredictionForm.propTypes = {
+    amountValidator: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
     isEnabled: PropTypes.bool.isRequired,
 }

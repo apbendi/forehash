@@ -27,6 +27,8 @@ class SubmissionFlow extends Component {
             minEthDepositKey: this.bankshot.methods.minEthDeposit.cacheCall(),
         }
 
+        this.validationResponseForDeposit = this.validationResponseForDeposit.bind(this);
+
         this.predictionCallback = this.predictionCallback.bind(this);
         this.backupContinue = this.backupContinue.bind(this);
         this.backupConfirm = this.backupConfirm.bind(this);
@@ -53,10 +55,33 @@ class SubmissionFlow extends Component {
                     .substr(0, length)
     }
 
+    validationResponseForDeposit(ethAmountString) {
+        if (ethAmountString.length < 1) {
+            return "";
+        }
+
+        let minEthDeposit = this.minEthDeposit();
+
+        if (null === minEthDeposit) {
+            return "Loading Contract Parameters";
+        }
+
+        let minWeiDeposit = this.utils.toBN(minEthDeposit);
+        let weiAmount = this.utils.toBN(this.utils.toWei(ethAmountString));
+
+        let isEnough = weiAmount.gte(minWeiDeposit);
+
+        if (!isEnough) {
+            let ethString = this.utils.fromWei(minEthDeposit, "ether");
+            return "The Minimum Deposit Is " + ethString + " ETH";
+        }
+
+        return "";
+    }
+
     // FLOW STEP CALLBACKS
 
     predictionCallback(prediction, deposit) {
-        console.log(typeof deposit);
         this.setState({
             flowStep: "BACKUP",
             predictionText: prediction,
@@ -162,6 +187,7 @@ class SubmissionFlow extends Component {
 
                 stepComponent = (
                     <PredictionForm
+                        amountValidator={this.validationResponseForDeposit}
                         onSubmit={this.predictionCallback}
                         isEnabled={isSubmissionEnabled} />
                 );   
