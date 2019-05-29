@@ -31,7 +31,8 @@ class PublishForm extends Component {
 
                 <button type="button" 
                         className="btn btn-default"
-                        onClick={this.handleSubmit}>
+                        onClick={this.handleSubmit}
+                        disabled={!this.props.isEnabled} >
                     Submit
                 </button>
             </div>
@@ -42,6 +43,7 @@ class PublishForm extends Component {
 PublishForm.propTyptes = {
     hash: PropTypes.string.isRequired,
     onSubmit: PropTypes.func.isRequired,
+    isEnabled: PropTypes.bool.isRequired,
 }
 
 export default PublishForm;

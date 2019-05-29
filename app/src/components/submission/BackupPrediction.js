@@ -25,7 +25,8 @@ class BackupPrediction extends Component {
                 </div>
                 <button type="button"
                         className="btn btn-default"
-                        onClick={this.handleClick}>
+                        onClick={this.handleClick}
+                        disabled={!this.props.isEnabled} >
                     Continue
                 </button>
             </div>
@@ -36,6 +37,7 @@ class BackupPrediction extends Component {
 BackupPrediction.propTypes = {
     fullText: PropTypes.string.isRequired,
     onContinue: PropTypes.func.isRequired,
+    isEnabled: PropTypes.bool.isRequired,
 }
 
 export default BackupPrediction;

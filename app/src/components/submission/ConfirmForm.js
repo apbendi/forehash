@@ -51,7 +51,8 @@ class ConfirmForm extends Component {
 
                     <button type="button"
                             className="btn btn-default"
-                            onClick={this.handleConfirm} >
+                            onClick={this.handleConfirm} 
+                            disabled={!this.props.isEnabled} >
                         Confirm
                     </button>
                 </div>
@@ -63,6 +64,7 @@ class ConfirmForm extends Component {
 ConfirmForm.propTypes = {
     onConfirm: PropTypes.func.isRequired,
     error: PropTypes.string,
+    isEnabled: PropTypes.bool.isRequired,
 };
 
 export default ConfirmForm;

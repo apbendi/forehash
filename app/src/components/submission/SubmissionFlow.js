@@ -148,6 +148,11 @@ class SubmissionFlow extends Component {
     // RENDER
     
     render() {
+        let ethVig  = this.ethVig();
+        let minEthDeposit = this.minEthDeposit();
+
+        let isSubmissionEnabled = (ethVig !== null && minEthDeposit !== null)
+
         var stepComponent = ("");
         var header = "";
 
@@ -157,7 +162,8 @@ class SubmissionFlow extends Component {
 
                 stepComponent = (
                     <PredictionForm
-                        onSubmit={this.predictionCallback} />
+                        onSubmit={this.predictionCallback}
+                        isEnabled={isSubmissionEnabled} />
                 );   
 
                 break;
@@ -167,7 +173,8 @@ class SubmissionFlow extends Component {
                 stepComponent =(
                     <BackupPrediction
                         fullText={this.fullText()}
-                        onContinue={this.backupContinue} />
+                        onContinue={this.backupContinue}
+                        isEnabled={isSubmissionEnabled} />
                 );
 
                 break;
@@ -177,7 +184,8 @@ class SubmissionFlow extends Component {
                 stepComponent = (
                     <ConfirmForm
                         onConfirm={this.backupConfirm}
-                        error={this.state.confirmError} />
+                        error={this.state.confirmError}
+                        isEnabled={isSubmissionEnabled} />
                 );
 
                 break;
@@ -187,7 +195,8 @@ class SubmissionFlow extends Component {
                 stepComponent = (
                     <PublishForm
                         hash={this.predictionHash()}
-                        onSubmit={this.publishHash} />
+                        onSubmit={this.publishHash}
+                        isEnabled={isSubmissionEnabled} />
                 );
                 break;
             default:

@@ -38,7 +38,7 @@ class PredictionForm extends Component {
     }
 
     render() {
-        let isButtonEnabled = this.state.predictionInput.length > 5;
+        let isButtonEnabled = (this.props.isEnabled && this.state.predictionInput.length > 5);
 
         return (
             <div>
@@ -80,6 +80,11 @@ class PredictionForm extends Component {
             </div>
         )
     }
+}
+
+PredictionForm.propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+    isEnabled: PropTypes.bool.isRequired,
 }
 
 export default PredictionForm;
