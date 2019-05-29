@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import PredictionForm from './PredictionForm';
 import BackupPrediction from './BackupPrediction';
 import ConfirmForm from './ConfirmForm';
+import PublishForm from './PublishForm';
 
 class SubmissionFlow extends Component {
 
@@ -22,6 +23,10 @@ class SubmissionFlow extends Component {
         this.predictionCallback = this.predictionCallback.bind(this);
         this.backupContinue = this.backupContinue.bind(this);
         this.backupConfirm = this.backupConfirm.bind(this);
+        this.publishHash = this.publishHash.bind(this);
+
+        this.fullText = this.fullText.bind(this);
+        this.predictionHash = this.predictionHash.bind(this);
     }
 
     generateSalt(length=8) {
@@ -49,7 +54,6 @@ class SubmissionFlow extends Component {
     }
 
     backupConfirm(confirmText) {
-        console.log("Hello world");
         if (confirmText === this.state.randomSalt) {
             this.setState({
                flowStep: "PUBLISH",
@@ -61,6 +65,22 @@ class SubmissionFlow extends Component {
         }
     }
 
+    publishHash() {
+        let hash = this.predictionHash();
+
+        console.log("Do it now " + hash);
+    }
+
+    fullText() {
+        return this.state.predictionText + " {" + this.state.randomSalt + "}";
+    }
+
+    predictionHash() {
+        let hash = this.utils.soliditySha3({type: 'string', value: this.fullText()});
+
+        return hash;
+    }
+    
     render() {
         var stepComponent = ("");
         var header = "";
@@ -81,8 +101,7 @@ class SubmissionFlow extends Component {
                 
                 stepComponent =(
                     <BackupPrediction
-                        prediction={this.state.predictionText}
-                        salt={this.state.randomSalt}
+                        fullText={this.fullText()}
                         onContinue={this.backupContinue}
                         />
                 );
@@ -100,6 +119,12 @@ class SubmissionFlow extends Component {
                 break;
             case "PUBLISH":
                 header = "Publish Hash";
+
+                stepComponent = (
+                    <PublishForm
+                        hash={this.predictionHash()}
+                        onSubmit={this.publishHash} />
+                );
                 break;
             default:
                 throw "Illegal State";

@@ -9,10 +9,6 @@ class BackupPrediction extends Component {
         this.handleClick = this.handleClick.bind(this);
     }
 
-    submissionText(prediction, salt) {
-        return prediction + ' {' + salt + '}';
-    }
-
     handleClick(event) {
         event.preventDefault();
         this.props.onContinue();
@@ -25,7 +21,7 @@ class BackupPrediction extends Component {
                 Save this EXACT text! It will be required to reclaim your deposit.
                 </p>
                 <div className="well">
-                    {this.submissionText(this.props.prediction, this.props.salt)}
+                    {this.props.fullText}
                 </div>
                 <button type="button"
                         className="btn btn-default"
@@ -38,8 +34,7 @@ class BackupPrediction extends Component {
 }
 
 BackupPrediction.propTypes = {
-    prediction: PropTypes.string.isRequired,
-    salt: PropTypes.string.isRequired,
+    fullText: PropTypes.string.isRequired,
     onContinue: PropTypes.func.isRequired,
 }
 
