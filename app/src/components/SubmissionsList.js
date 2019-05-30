@@ -136,7 +136,7 @@ class SubmissionsList extends Component {
 
                 revealInterface = (
                     <div>
-                        <h2>Revealed Submission</h2>
+                        <h3>Revealed Prediction</h3>
                         <div className="panel panel-default">
                             <div className="panel-body">
                                 {revelationText}
@@ -151,7 +151,7 @@ class SubmissionsList extends Component {
 
                 revealInterface = (
                     <form>
-                        <h2>Reveal Submission</h2>
+                        <h3>Reveal Prediction</h3>
                         <div className="form-group">
                             <textarea className="form-control"
                                       value={this.state.revealInput}
@@ -171,7 +171,7 @@ class SubmissionsList extends Component {
 
         return (
             <div>
-                <h2>Submissions</h2>
+                <h2>Past Predictions</h2>
                 <div className="list-group">
                     {hashList}
                 </div>

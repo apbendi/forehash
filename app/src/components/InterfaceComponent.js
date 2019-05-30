@@ -14,7 +14,8 @@ class InterfaceComponent extends Component {
     return (
       <div className="App">
         <SubmissionFlow />
-        {/*<SubmissionsList />*/}
+        <hr />
+        <SubmissionsList />
       </div>
     );
   }
