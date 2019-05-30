@@ -5,6 +5,7 @@ import PredictionForm from './PredictionForm';
 import BackupPrediction from './BackupPrediction';
 import ConfirmForm from './ConfirmForm';
 import PublishForm from './PublishForm';
+import SuccessMessage from './SuccessMessage';
 
 class SubmissionFlow extends Component {
 
@@ -25,14 +26,17 @@ class SubmissionFlow extends Component {
             confirmError: null,
             ethVigKey: this.bankshot.methods.ethVig.cacheCall(),
             minEthDepositKey: this.bankshot.methods.minEthDeposit.cacheCall(),
+            hashesKey: this.bankshot.methods.hashesForAddress.cacheCall(props.account),
         }
 
         this.validationResponseForDeposit = this.validationResponseForDeposit.bind(this);
+        this.resetState = this.resetState.bind(this);
 
         this.predictionCallback = this.predictionCallback.bind(this);
         this.backupContinue = this.backupContinue.bind(this);
         this.backupConfirm = this.backupConfirm.bind(this);
         this.publishHash = this.publishHash.bind(this);
+        this.continueOnSuccess = this.continueOnSuccess.bind(this);
 
         this.fullText = this.fullText.bind(this);
         this.predictionHash = this.predictionHash.bind(this);
@@ -41,6 +45,22 @@ class SubmissionFlow extends Component {
         this.ethVig = this.ethVig.bind(this);
         this.minEthDeposit = this.minEthDeposit.bind(this);
         this.minEthPayable = this.minEthPayable.bind(this);
+        this.hashes = this.hashes.bind(this);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.state.flowStep !== 'PUBLISH') {
+            return;
+        }
+
+        let hashes = this.hashes(nextProps);
+        let predictionHash = this.predictionHash();
+
+        if (hashes.includes(predictionHash)) {
+            this.setState({
+                flowStep: "SUCCESS",
+            });
+        }
     }
 
     // HELPERS
@@ -79,6 +99,16 @@ class SubmissionFlow extends Component {
         return "";
     }
 
+    resetState() {
+        this.setState({
+            flowStep: "PREDICTION",
+            predictionText: "",
+            depositAmount: "",
+            randomSalt: this.generateSalt(),
+            confirmError: null,
+        });
+    }
+
     // FLOW STEP CALLBACKS
 
     predictionCallback(prediction, deposit) {
@@ -115,6 +145,10 @@ class SubmissionFlow extends Component {
         let valueSum = this.utils.toBN(ethVig).add(this.utils.toBN(depositWei));
 
         this.bankshot.methods.submitHash.cacheSend(hash, {value: valueSum});
+    }
+
+    continueOnSuccess() {
+        this.resetState();
     }
 
     // COMPUTED PROPERTIES
@@ -168,6 +202,28 @@ class SubmissionFlow extends Component {
         let sum = this.utils.toBN(ethVig).add(this.utils.toBN(minEthDeposit));
 
         return sum;
+    }
+
+    hashes(props) {
+        if(props === undefined) {
+            props = this.props;
+        }
+
+        if (!props.bankshotState.initialized) {
+            return [];
+        }
+
+        if ( !(this.state.hashesKey in props.bankshotState.hashesForAddress) ) {
+            return [];
+        }
+
+        let contractValue = props.bankshotState.hashesForAddress[this.state.hashesKey].value;
+
+        if(!contractValue) {
+            return [];
+        }
+
+        return contractValue;
     }
 
     // RENDER
@@ -225,8 +281,19 @@ class SubmissionFlow extends Component {
                         isEnabled={isSubmissionEnabled} />
                 );
                 break;
+            case "SUCCESS":
+                header = "Prediction Published";
+
+                stepComponent = (
+                    <SuccessMessage
+                        hash={this.predictionHash()}
+                        onSubmit={this.continueOnSuccess}
+                        isEnabled={isSubmissionEnabled} />
+                );
+
+                break;
             default:
-                throw "Illegal State";
+                throw new Error("Illegal State");
         }
         
         return (
