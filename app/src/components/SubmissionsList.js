@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { drizzleConnect } from 'drizzle-react';
 import PropTypes from 'prop-types';
-import { Button, Form, } from 'react-bootstrap';
+import { Button, Form, Container, Row, Col, ListGroup } from 'react-bootstrap';
+import HashSpan from './HashSpan';
 
 class SubmissionsList extends Component {
 
@@ -38,7 +39,7 @@ class SubmissionsList extends Component {
     handleHashClick(event) {
         event.preventDefault();
 
-        let subID = event.target.value;
+        let subID = event.currentTarget.value;
         let newSelection = (subID === this.state.selectedSubID) ? "" : subID;
 
         this.setState({
@@ -50,7 +51,7 @@ class SubmissionsList extends Component {
         event.preventDefault();
 
         this.setState({
-            revealInput: event.target.value,
+            revealInput: event.currentTarget.value,
         });
     }
 
@@ -122,7 +123,8 @@ class SubmissionsList extends Component {
                                     key={subID}
                                     value={subID}
                                     onClick={this.handleHashClick}>
-                                {hash}{badge}
+                                <HashSpan hash={hash} />
+                                {badge}
                             </button>
                         );
                     });
@@ -171,15 +173,19 @@ class SubmissionsList extends Component {
         }
 
         return (
-            <div>
-                <h2>Past Predictions</h2>
-                <div className="list-group mb-4">
-                    {hashList}
-                </div>
-                <div>
-                    {revealInterface}
-                </div>
-            </div>
+            <Container>
+                <Row>
+                    <Col md="4" sm="12">
+                        <h2>Past Predictions</h2>
+                        <ListGroup>
+                            {hashList}
+                        </ListGroup>
+                    </Col>
+                    <Col md="8" sm="12">
+                        {revealInterface}
+                    </Col>
+                </Row>
+            </Container>
         );
     }
 }
