@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import { drizzleConnect } from 'drizzle-react';
+import { Redirect } from 'react-router-dom';
 import PredictionForm from './PredictionForm';
 import BackupPrediction from './BackupPrediction';
 import ConfirmForm from './ConfirmForm';
@@ -30,7 +31,6 @@ class SubmissionFlow extends Component {
         }
 
         this.validationResponseForDeposit = this.validationResponseForDeposit.bind(this);
-        this.resetState = this.resetState.bind(this);
 
         this.predictionCallback = this.predictionCallback.bind(this);
         this.backupContinue = this.backupContinue.bind(this);
@@ -99,16 +99,6 @@ class SubmissionFlow extends Component {
         return "";
     }
 
-    resetState() {
-        this.setState({
-            flowStep: "PREDICTION",
-            predictionText: "",
-            depositAmount: "",
-            randomSalt: this.generateSalt(),
-            confirmError: null,
-        });
-    }
-
     // FLOW STEP CALLBACKS
 
     predictionCallback(prediction, deposit) {
@@ -148,7 +138,9 @@ class SubmissionFlow extends Component {
     }
 
     continueOnSuccess() {
-        this.resetState();
+        this.setState({
+            flowStep: "REDIRECT",
+        });
     }
 
     // COMPUTED PROPERTIES
@@ -289,6 +281,12 @@ class SubmissionFlow extends Component {
                         hash={this.predictionHash()}
                         onSubmit={this.continueOnSuccess}
                         isEnabled={isSubmissionEnabled} />
+                );
+
+                break;
+            case "REDIRECT":
+                stepComponent = (
+                    <Redirect to="/" />
                 );
 
                 break;
