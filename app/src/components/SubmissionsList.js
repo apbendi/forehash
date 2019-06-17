@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { drizzleConnect } from 'drizzle-react';
 import PropTypes from 'prop-types';
+import { Button, Form, } from 'react-bootstrap';
 
 class SubmissionsList extends Component {
 
@@ -150,21 +151,21 @@ class SubmissionsList extends Component {
                 let isCorrectRevelation = (selectedHash === revealInputHash);
 
                 revealInterface = (
-                    <form>
+                    <Form>
                         <h3>Reveal Prediction</h3>
-                        <div className="form-group">
-                            <textarea className="form-control"
-                                      value={this.state.revealInput}
-                                      onChange={this.handleRevealInput} />
-                            <br />
-
-                            <button className="btn btn-primary"
+                        <Form.Group controlId="formRevealSubmission">
+                            <Form.Control as="textarea"
+                                            rows="2"
+                                            className="mb-3"
+                                            value={this.state.revealInput}
+                                            onChange={this.handleRevealInput} />
+                            <Button variant="primary"
                                     disabled={!isCorrectRevelation}
                                     onClick={this.handleRevealClick}>
                                 Reveal This Submission
-                            </button>
-                        </div>
-                    </form>
+                            </Button>
+                        </Form.Group>
+                    </Form>
                 );
             }
         }
