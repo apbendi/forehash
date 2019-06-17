@@ -20,11 +20,11 @@ class BackupPrediction extends Component {
                 <p>
                 Save this EXACT text! It will be required to reclaim your deposit.
                 </p>
-                <div className="well">
+                <div className="card card-body bg-light mb-3">
                     {this.props.fullText}
                 </div>
                 <button type="button"
-                        className="btn btn-default"
+                        className="btn btn-primary"
                         onClick={this.handleClick}
                         disabled={!this.props.isEnabled} >
                     Continue

@@ -22,15 +22,15 @@ class PublishForm extends Component {
                     the hash of your prediction and locks your deposit.
                 </p>
 
-                <div className="panel panel-default">
-                    <div className="panel-heading">Prediction Hash</div>
-                    <div className="panel-body">
+                <div className="card mb-3">
+                    <div className="card-header">Prediction Hash</div>
+                    <div className="card-body">
                         {this.props.hash}
                     </div>
                 </div>
 
                 <button type="button" 
-                        className="btn btn-default"
+                        className="btn btn-primary"
                         onClick={this.handleSubmit}
                         disabled={!this.props.isEnabled} >
                     Submit

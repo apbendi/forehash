@@ -79,7 +79,7 @@ class PredictionForm extends Component {
                         <br />
 
                         <button type="button"
-                                className="btn btn-default"
+                                className="btn btn-primary"
                                 disabled={!isButtonEnabled} 
                                 onClick={this.handleSubmit}>
                             Prepare For Submission

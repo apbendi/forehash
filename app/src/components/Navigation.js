@@ -3,13 +3,11 @@ import { NavLink } from 'react-router-dom';
 
 export default function Navigation() {
     return (
-        <nav className="navbar navbar-default navbar-fixed-top">
-            <div className="container-fluid">
-                <ul className="nav navbar-nav">
-                    <li><NavLink to="/">Predictions</NavLink></li>
-                    <li><NavLink to="/new">New</NavLink></li>
-                </ul>
-            </div>
+        <nav className="navbar fixed-top navbar-light bg-light">
+            <ul className="navbar-nav">
+                <li className="nav-item"><NavLink to="/">Predictions</NavLink></li>
+                <li className="nav-item"><NavLink to="/new">New</NavLink></li>
+            </ul>
         </nav>
     );
 }

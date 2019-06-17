@@ -102,13 +102,13 @@ class SubmissionsList extends Component {
         let hashList = this.hashes().map( (hash, subID) => {
                         subID = subID.toString();
 
-                        var className = "list-group-item";
+                        var className = "list-group-item d-flex justify-content-between align-items-center";
                         var badge = ""
 
                         let revelation = this.revelationFor(subID);
                         if (null !== revelation) {
-                            className += " list-group-item-warning";
-                            badge = (<span className="badge">Revealed</span>);
+                            //className += " list-group-item-warning";
+                            badge = (<span className="badge badge-warning badge-pill">Revealed</span>);
                         }
 
                         if (this.state.selectedSubID === subID) {
@@ -137,8 +137,8 @@ class SubmissionsList extends Component {
                 revealInterface = (
                     <div>
                         <h3>Revealed Prediction</h3>
-                        <div className="panel panel-default">
-                            <div className="panel-body">
+                        <div className="card">
+                            <div className="card-body">
                                 {revelationText}
                             </div>
                         </div>
@@ -158,7 +158,7 @@ class SubmissionsList extends Component {
                                       onChange={this.handleRevealInput} />
                             <br />
 
-                            <button className="btn btn-default"
+                            <button className="btn btn-primary"
                                     disabled={!isCorrectRevelation}
                                     onClick={this.handleRevealClick}>
                                 Reveal This Submission
@@ -172,7 +172,7 @@ class SubmissionsList extends Component {
         return (
             <div>
                 <h2>Past Predictions</h2>
-                <div className="list-group">
+                <div className="list-group mb-4">
                     {hashList}
                 </div>
                 <div>

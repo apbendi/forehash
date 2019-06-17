@@ -22,15 +22,15 @@ class SuccessMessage extends Component {
                     backed up somewhere safe!
                 </p>
 
-                <div className="panel panel-success">
-                    <div className="panel-heading">Hash Published</div>
-                    <div className="panel-body">
+                <div className="card mb-3">
+                    <div className="card-header">Hash Published</div>
+                    <div className="card-body">
                         {this.props.hash}
                     </div>
                 </div>
 
                 <button type="button" 
-                        className="btn btn-default"
+                        className="btn btn-success"
                         onClick={this.handleNext}
                         disabled={!this.props.isEnabled} >
                     Continue

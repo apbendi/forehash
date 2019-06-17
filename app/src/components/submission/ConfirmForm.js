@@ -50,7 +50,7 @@ class ConfirmForm extends Component {
                     <br />
 
                     <button type="button"
-                            className="btn btn-default"
+                            className="btn btn-primary"
                             onClick={this.handleConfirm} 
                             disabled={!this.props.isEnabled} >
                         Confirm
