@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import SubmissionsList from './SubmissionsList';
 import SubmissionFlow from './submission/SubmissionFlow';
+import NotFound from './NotFound';
 
 class InterfaceComponent extends Component {
 
@@ -12,11 +14,15 @@ class InterfaceComponent extends Component {
 
   render() {
     return (
-      <div className="App">
-        <SubmissionFlow />
-        <hr />
-        <SubmissionsList />
-      </div>
+      <BrowserRouter>
+        <div className="App">
+          <Switch>
+            <Route path="/" component={SubmissionsList} exact />
+            <Route path="/new" component={SubmissionFlow} />
+            <Route component={NotFound} />
+          </Switch>
+        </div>
+      </BrowserRouter>
     );
   }
 }
