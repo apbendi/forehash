@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import SubmissionsList from './SubmissionsList';
 import SubmissionFlow from './submission/SubmissionFlow';
 import NotFound from './NotFound';
+import Navigation from './Navigation';
 
 class InterfaceComponent extends Component {
 
@@ -16,6 +17,7 @@ class InterfaceComponent extends Component {
     return (
       <BrowserRouter>
         <div className="App">
+          <Navigation />
           <Switch>
             <Route path="/" component={SubmissionsList} exact />
             <Route path="/new" component={SubmissionFlow} />
