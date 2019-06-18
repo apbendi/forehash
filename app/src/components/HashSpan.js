@@ -7,7 +7,7 @@ export default function HashSpan(props) {
 
     return (
         <span>
-            {briefHash}
+            <h5>{briefHash}</h5>
         </span>
     );
 }

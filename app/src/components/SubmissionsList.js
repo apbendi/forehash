@@ -18,7 +18,7 @@ class SubmissionsList extends Component {
             revealInput: "",
         }
 
-        this.hashes = this.hashes.bind(this);
+        this.submissions = this.submissions.bind(this);
         this.revelations = this.revelations.bind(this);
         this.revelationFor = this.revelationFor.bind(this);
         this.handleHashClick = this.handleHashClick.bind(this);
@@ -36,10 +36,7 @@ class SubmissionsList extends Component {
         });
     }
 
-    handleHashClick(event) {
-        event.preventDefault();
-
-        let subID = event.currentTarget.value;
+    handleHashClick(subID) {
         let newSelection = (subID === this.state.selectedSubID) ? "" : subID;
 
         this.setState({
@@ -63,7 +60,7 @@ class SubmissionsList extends Component {
         this.bankshot.methods.revealSubmission.cacheSend(this.state.selectedSubID, encodedRevelation);
     }
 
-    hashes() {
+    submissions() {
         if (!this.props.bankshotState.initialized) {
             return [];
         }
@@ -74,11 +71,24 @@ class SubmissionsList extends Component {
 
         let contractValue = this.props.bankshotState.submissionsForAddress[this.state.submissionsKey].value;
 
-        if(!contractValue || !contractValue.hashes) {
+        if(!contractValue || !contractValue.hashes || !contractValue.deposits) {
             return [];
         }
 
-        return contractValue.hashes;
+        if (contractValue.hashes.length !== contractValue.deposits.length) {
+            throw new Error("Invalid response from contract call");
+        }
+
+        var submissions = [];
+
+        for (var i = 0; i < contractValue.hashes.length; i++){
+            submissions[i] = {
+                                hash: contractValue.hashes[i],
+                                deposit: contractValue.deposits[i],
+                            }
+        }
+
+        return submissions;
     }
 
     revelations() {
@@ -101,16 +111,17 @@ class SubmissionsList extends Component {
     }
     
     render() {
-        let hashList = this.hashes().map( (hash, subID) => {
+        let hashList = this.submissions().map( (submission, subID) => {
                         subID = subID.toString();
 
-                        var className = "list-group-item d-flex justify-content-between align-items-center";
+                        let depositString = this.utils.fromWei(submission.deposit, "ether");
+
+                        var className = "list-group-item list-group-item-action flex-column align-items-start";
                         var badge = ""
 
                         let revelation = this.revelationFor(subID);
-                        console.log(revelation);
+
                         if (null !== revelation) {
-                            //className += " list-group-item-warning";
                             badge = (<span className="badge badge-warning badge-pill">Revealed</span>);
                         }
 
@@ -119,14 +130,21 @@ class SubmissionsList extends Component {
                         }
 
                         return (
-                            <button type="button" 
+                            <a href="/"
                                     className={className}
                                     key={subID}
-                                    value={subID}
-                                    onClick={this.handleHashClick}>
-                                <HashSpan hash={hash} />
-                                {badge}
-                            </button>
+                                    onClick={(event) => {
+                                            event.preventDefault();
+                                            this.handleHashClick(subID);
+                                        }
+                                    }>
+
+                                <div className="d-flex w-100 justify-content-between">
+                                    <HashSpan hash={submission.hash} />
+                                    <span>{badge}</span>
+                                </div>
+                                <span>Deposit: {depositString} ETH</span>
+                            </a>
                         );
                     });
 
@@ -149,7 +167,7 @@ class SubmissionsList extends Component {
                     </div>
                 );
             } else {
-                let selectedHash = this.hashes()[this.state.selectedSubID];
+                let selectedHash = this.submissions()[this.state.selectedSubID].hash;
                 let revealInputHash = this.utils.soliditySha3({type: 'string', value: this.state.revealInput});
                 let isCorrectRevelation = (selectedHash === revealInputHash);
 
