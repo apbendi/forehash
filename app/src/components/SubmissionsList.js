@@ -13,7 +13,7 @@ class SubmissionsList extends Component {
         this.utils = context.drizzle.web3.utils;
 
         this.state = {
-            hashesKey: this.bankshot.methods.hashesForAddress.cacheCall(props.account),
+            submissionsKey: this.bankshot.methods.submissionsForAddress.cacheCall(props.account),
             selectedSubID: "",
             revealInput: "",
         }
@@ -32,7 +32,7 @@ class SubmissionsList extends Component {
         }
 
         this.setState({
-            hashesKey: this.bankshot.methods.hashesForAddress.cacheCall(nextProps.account),
+            submissionsKey: this.bankshot.methods.submissionsForAddress.cacheCall(nextProps.account),
         });
     }
 
@@ -68,17 +68,17 @@ class SubmissionsList extends Component {
             return [];
         }
 
-        if ( !(this.state.hashesKey in this.props.bankshotState.hashesForAddress) ) {
+        if ( !(this.state.submissionsKey in this.props.bankshotState.submissionsForAddress) ) {
             return [];
         }
 
-        let contractValue = this.props.bankshotState.hashesForAddress[this.state.hashesKey].value;
+        let contractValue = this.props.bankshotState.submissionsForAddress[this.state.submissionsKey].value;
 
-        if(!contractValue) {
+        if(!contractValue || !contractValue.hashes) {
             return [];
         }
 
-        return contractValue;
+        return contractValue.hashes;
     }
 
     revelations() {
@@ -108,6 +108,7 @@ class SubmissionsList extends Component {
                         var badge = ""
 
                         let revelation = this.revelationFor(subID);
+                        console.log(revelation);
                         if (null !== revelation) {
                             //className += " list-group-item-warning";
                             badge = (<span className="badge badge-warning badge-pill">Revealed</span>);

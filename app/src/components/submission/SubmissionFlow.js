@@ -27,7 +27,7 @@ class SubmissionFlow extends Component {
             confirmError: null,
             ethVigKey: this.bankshot.methods.ethVig.cacheCall(),
             minEthDepositKey: this.bankshot.methods.minEthDeposit.cacheCall(),
-            hashesKey: this.bankshot.methods.hashesForAddress.cacheCall(props.account),
+            submissionsKey: this.bankshot.methods.submissionsForAddress.cacheCall(props.account),
         }
 
         this.validationResponseForDeposit = this.validationResponseForDeposit.bind(this);
@@ -205,17 +205,17 @@ class SubmissionFlow extends Component {
             return [];
         }
 
-        if ( !(this.state.hashesKey in props.bankshotState.hashesForAddress) ) {
+        if ( !(this.state.submissionsKey in props.bankshotState.submissionsForAddress) ) {
             return [];
         }
 
-        let contractValue = props.bankshotState.hashesForAddress[this.state.hashesKey].value;
+        let contractValue = props.bankshotState.submissionsForAddress[this.state.submissionsKey].value;
 
-        if(!contractValue) {
+        if(!contractValue || !contractValue.hashes) {
             return [];
         }
 
-        return contractValue;
+        return contractValue.hashes;
     }
 
     // RENDER

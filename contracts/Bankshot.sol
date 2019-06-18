@@ -53,15 +53,18 @@ contract Bankshot {
         vigBalance += (msg.value - deposit);
     }
 
-    function hashesForAddress(address _address) public view returns(bytes32[] memory) {
+    function submissionsForAddress(address _address) public view returns(bytes32[] memory hashes, uint256[] memory deposits) {
         Submission[] storage subs = submissions[_address];
-        bytes32[] memory hashes = new bytes32[](subs.length);
 
-        for(uint i = 0; i < subs.length; i++) {
+        hashes = new bytes32[](subs.length);
+        deposits = new uint256[](subs.length);
+
+        for (uint i = 0; i < subs.length; i++) {
             hashes[i] = subs[i].sHash;
+            deposits[i] = subs[i].deposit;
         }
 
-        return hashes;
+        return (hashes, deposits);
     }
 
     function revealSubmission(uint _subID, bytes memory _revelation) public {

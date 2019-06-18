@@ -124,10 +124,13 @@ contract("Bankshot", accounts => {
     
     await bankshotInstance.submitHash(hash, {from: user1Addr, value: txValue});
 
-    let hashes = await bankshotInstance.hashesForAddress(user1Addr);
+    let {hashes, deposits} = await bankshotInstance.submissionsForAddress(user1Addr);
 
     assert.equal(hashes.length, 1, "Unexpected hash count for user");
-    assert(hashes.includes(hash), "Submitted hash not included in results");
+    assert.equal(hashes[0], hash, "Submitted hash not included in results");
+
+    assert.equal(deposits.length, 1, "Unexpected deposit count for user");
+    assert.equal(deposits[0].toString(10), newMinEthDeposit, "");
   });
 
   it("should let another user submit a hash with above min payment", async () => {
@@ -137,10 +140,13 @@ contract("Bankshot", accounts => {
     
     await bankshotInstance.submitHash(hash, {from: user2Addr, value: txValue});
 
-    let hashes = await bankshotInstance.hashesForAddress(user2Addr);
+    let {hashes, deposits} = await bankshotInstance.submissionsForAddress(user2Addr);
 
     assert.equal(hashes.length, 1, "Unexpected hash count for user");
-    assert(hashes.includes(hash), "Submitted hash not included in results");
+    assert.equal(hashes[0], hash, "Submitted hash not included in results");
+
+    assert.equal(deposits.length, 1, "Unexpected deposit count for user");
+    assert.equal(deposits[0].toString(10), extraDeposit, "");
   });
 
   it("should not let a user submit without a payment", async () => {
@@ -168,10 +174,13 @@ contract("Bankshot", accounts => {
     let txValue = addWeiStrings(newVig, newMinEthDeposit);
 
     await bankshotInstance.submitHash(hash, {from: user1Addr, value: txValue});
-    let hashes = await bankshotInstance.hashesForAddress(user1Addr);
+    let {hashes, deposits} = await bankshotInstance.submissionsForAddress(user1Addr);
 
     assert.equal(hashes.length, 2, "Unexpected hash count for user");
-    assert(hashes.includes(hash), "Submitted hash not included in results");
+    assert.equal(hashes[1], hash, "Submitted hash not included in results");
+
+    assert.equal(deposits.length, 2, "Unexpected deposit count for user");
+    assert.equal(deposits[1].toString(10), newMinEthDeposit, "");
 
     let wrongRevealTx = bankshotInstance.revealSubmission(1, utils.toHex(string + "!!"), {from: user1Addr});
     await assertRevert(wrongRevealTx, "INVALID_REVEAL", "Revealed when it shouldn't have");
