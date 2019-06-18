@@ -41,6 +41,7 @@ class SubmissionsList extends Component {
 
         this.setState({
             selectedSubID: newSelection,
+            revealInput: "",
         });
     }
 
