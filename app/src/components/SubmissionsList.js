@@ -119,11 +119,14 @@ class SubmissionsList extends Component {
 
                         var className = "list-group-item list-group-item-action flex-column align-items-start";
                         var badge = ""
+                        var revealDate = ""
 
                         let revelation = this.revelationFor(subID);
 
                         if (null !== revelation) {
                             badge = (<span className="badge badge-warning badge-pill">Revealed</span>);
+                            let date = new Date(1000 * parseInt(revelation.returnValues.date));
+                            revealDate = "Revealed: " + date.toLocaleDateString();
                         }
 
                         if (this.state.selectedSubID === subID) {
@@ -144,7 +147,8 @@ class SubmissionsList extends Component {
                                     <HashSpan hash={submission.hash} />
                                     <span>{badge}</span>
                                 </div>
-                                <span>Deposit: {depositString} ETH</span>
+                                <span>Deposit: {depositString} ETH</span><br />
+                                <span>{revealDate}</span>
                             </a>
                         );
                     });

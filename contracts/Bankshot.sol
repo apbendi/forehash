@@ -17,6 +17,7 @@ contract Bankshot {
    event Revelation(
        address indexed user,
        uint256 indexed subID,
+       uint256 indexed date,
        bytes revelation
    );
 
@@ -75,7 +76,7 @@ contract Bankshot {
         require(revealHash == sub.sHash, "INVALID_REVEAL");
 
         sub.isRevealed = true;
-        emit Revelation(msg.sender, _subID, _revelation);
+        emit Revelation(msg.sender, _subID, block.timestamp, _revelation);
 
         msg.sender.transfer(sub.deposit);
     }
