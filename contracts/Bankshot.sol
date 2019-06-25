@@ -1,3 +1,4 @@
+
 pragma solidity >=0.5.0 <0.6.0;
 
 contract Bankshot {
@@ -13,6 +14,12 @@ contract Bankshot {
    }
 
    mapping(address => Submission[]) submissions;
+
+   event Publication(
+       address indexed user,
+       uint256 indexed subID,
+       uint256 indexed date
+   );
 
    event Revelation(
        address indexed user,
@@ -52,6 +59,8 @@ contract Bankshot {
         uint256 deposit = msg.value - ethVig;
         submissions[msg.sender].push(Submission({ sHash: _hash, deposit: deposit, isRevealed: false}));
         vigBalance += (msg.value - deposit);
+
+        emit Publication(msg.sender, submissions[msg.sender].length - 1, block.timestamp); // possible re-entrancy issue w/ submissions length?
     }
 
     function submissionsForAddress(address _address) public view returns(bytes32[] memory hashes, uint256[] memory deposits) {

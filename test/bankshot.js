@@ -133,6 +133,11 @@ contract("Bankshot", accounts => {
     assert.equal(deposits[0].toString(10), newMinEthDeposit, "");
   });
 
+  it("should broadcast an event for the first submission", async () => {
+    let events = await bankshotInstance.getPastEvents('Publication', {filter: {user: user1Addr, subID: 0}, fromBlock: 0, toBlock: 'latest'});
+    assert.equal(events.length, 1, "Didn't find submission event, or found too many");
+  });
+
   it("should let another user submit a hash with above min payment", async () => {
     let string = "Hello, Cruel World";
     let hash = utils.soliditySha3({type: 'string', value: string});
@@ -147,6 +152,11 @@ contract("Bankshot", accounts => {
 
     assert.equal(deposits.length, 1, "Unexpected deposit count for user");
     assert.equal(deposits[0].toString(10), extraDeposit, "");
+  });
+
+  it("should broadcast an event for another user's submission", async () => {
+    let events = await bankshotInstance.getPastEvents('Publication', {filter: {user: user2Addr, subID: 0}, fromBlock: 0, toBlock: 'latest'});
+    assert.equal(events.length, 1, "Didn't find submission event, or found too many");
   });
 
   it("should not let a user submit without a payment", async () => {
@@ -184,6 +194,11 @@ contract("Bankshot", accounts => {
 
     let wrongRevealTx = bankshotInstance.revealSubmission(1, utils.toHex(string + "!!"), {from: user1Addr});
     await assertRevert(wrongRevealTx, "INVALID_REVEAL", "Revealed when it shouldn't have");
+  });
+
+  it("should broadcast a publication event for a user's second submission", async () => {
+    let events = await bankshotInstance.getPastEvents('Publication', {filter: {user: user1Addr, subID: 1}, fromBlock: 0, toBlock: 'latest'});
+    assert.equal(events.length, 1, "Didn't find submission event, or found too many");
   });
 
   it("should not show a revelation for a submission that hasn't been revealed", async () => {
