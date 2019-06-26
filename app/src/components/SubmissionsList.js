@@ -21,6 +21,7 @@ class SubmissionsList extends Component {
         this.submissions = this.submissions.bind(this);
         this.revelations = this.revelations.bind(this);
         this.revelationFor = this.revelationFor.bind(this);
+        this.publications = this.publications.bind(this);
         this.handleHashClick = this.handleHashClick.bind(this);
         this.handleRevealInput = this.handleRevealInput.bind(this);
         this.handleRevealClick = this.handleRevealClick.bind(this);
@@ -99,6 +100,13 @@ class SubmissionsList extends Component {
         });
     }
 
+    publications() {
+        return this.props.bankshotState.events.filter( event => {
+            return (event.event === 'Publication' && 
+                    event.returnValues.user === this.props.account);
+        });
+    }
+
     revelationFor(subID) {
         let reveals = this.revelations().filter(revelation => {
             return revelation.returnValues.subID === subID;
@@ -106,6 +114,18 @@ class SubmissionsList extends Component {
 
         if (reveals.length > 0) {
             return reveals[0];
+        } else {
+            return null;
+        }
+    }
+
+    publicationsFor(subID) {
+        let pubs = this.publications().filter(publication => {
+            return publication.returnValues.subID === subID;
+        });
+
+        if (pubs.length > 0) {
+            return pubs[0];
         } else {
             return null;
         }
@@ -118,10 +138,12 @@ class SubmissionsList extends Component {
                         let depositString = this.utils.fromWei(submission.deposit, "ether");
 
                         var className = "list-group-item list-group-item-action flex-column align-items-start";
-                        var badge = ""
-                        var revealDate = ""
+                        var pubDate = "";
+                        var badge = "";
+                        var revealDate = "";
 
                         let revelation = this.revelationFor(subID);
+                        let publication = this.publicationsFor(subID);
 
                         if (null !== revelation) {
                             badge = (<span className="badge badge-warning badge-pill">Revealed</span>);
@@ -129,8 +151,13 @@ class SubmissionsList extends Component {
                             revealDate = "Revealed: " + date.toLocaleDateString();
                         }
 
+                        if (null !== publication) {
+                            let date = new Date(1000 * parseInt(publication.returnValues.date));
+                            pubDate = "Published: " + date.toLocaleDateString();
+                        }
+
                         if (this.state.selectedSubID === subID) {
-                            className += " active"
+                            className += " active";
                         }
 
                         return (
@@ -147,6 +174,7 @@ class SubmissionsList extends Component {
                                     <HashSpan hash={submission.hash} />
                                     <span>{badge}</span>
                                 </div>
+                                <span>{pubDate}</span><br />
                                 <span>Deposit: {depositString} ETH</span><br />
                                 <span>{revealDate}</span>
                             </a>

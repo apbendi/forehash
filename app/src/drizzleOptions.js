@@ -15,6 +15,10 @@ const options = {
                   eventName: "Revelation", 
                   eventOptions: {fromBlock: 0},
                 },
+                {
+                  eventName: "Publication",
+                  eventOptions: {fromBlock: 0},
+                }
               ],
   },
   polls: {
