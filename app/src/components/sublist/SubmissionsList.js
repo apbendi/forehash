@@ -144,7 +144,7 @@ class SubmissionsList extends Component {
             return null;
         }
     }
-    
+
     render() {
         if (null !== this.state.newSubIDSelection) {
             let newURL = "/" + this.state.newSubIDSelection;

@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import SubmissionsList from './sublist/SubmissionsList';
 import SubmissionFlow from './submission/SubmissionFlow';
+import RevelationForm from './revelation/RevelationForm';
 import NotFound from './NotFound';
 import Navigation from './Navigation';
+import SubmissionsContainer from './SubmissionsContainer';
 
 class InterfaceComponent extends Component {
 
@@ -20,6 +22,7 @@ class InterfaceComponent extends Component {
           <Navigation />
           <Switch>
             <Route path="/" component={SubmissionsList} exact />
+            <Route path="/:subid(\d+)/reveal" render={(props) => <SubmissionsContainer {...props} component={RevelationForm}/>} />
             <Route path="/:subid(\d+)" component={SubmissionsList} />
             <Route path="/new" component={SubmissionFlow} />
             <Route component={NotFound} />
