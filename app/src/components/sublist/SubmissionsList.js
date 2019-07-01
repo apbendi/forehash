@@ -3,7 +3,7 @@ import { drizzleConnect } from 'drizzle-react';
 import PropTypes from 'prop-types';
 import { Button, Form, Container, Row, Col, ListGroup } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
-import HashSpan from './HashSpan';
+import HashSpan from '../HashSpan';
 
 class SubmissionsList extends Component {
 

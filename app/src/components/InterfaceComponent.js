@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import SubmissionsList from './SubmissionsList';
+import SubmissionsList from './sublist/SubmissionsList';
 import SubmissionFlow from './submission/SubmissionFlow';
 import NotFound from './NotFound';
 import Navigation from './Navigation';
