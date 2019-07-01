@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { drizzleConnect } from 'drizzle-react';
 import PropTypes from 'prop-types';
 import { Button, Form, Container, Row, Col, ListGroup } from 'react-bootstrap';
+import { Redirect } from 'react-router-dom';
 import HashSpan from './HashSpan';
 
 class SubmissionsList extends Component {
@@ -14,10 +15,11 @@ class SubmissionsList extends Component {
 
         this.state = {
             submissionsKey: this.bankshot.methods.submissionsForAddress.cacheCall(props.account),
-            selectedSubID: "",
             revealInput: "",
+            newSubIDSelection: null,
         }
 
+        this.urlSubID = this.urlSubID.bind(this);
         this.submissions = this.submissions.bind(this);
         this.revelations = this.revelations.bind(this);
         this.revelationFor = this.revelationFor.bind(this);
@@ -28,20 +30,24 @@ class SubmissionsList extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.account === this.props.account) {
-            return;
+        if (nextProps.account !== this.props.account) {
+            this.setState({
+                submissionsKey: this.bankshot.methods.submissionsForAddress.cacheCall(nextProps.account),
+            });
         }
 
-        this.setState({
-            submissionsKey: this.bankshot.methods.submissionsForAddress.cacheCall(nextProps.account),
-        });
+        if (null !== this.state.newSubIDSelection) {
+            this.setState({
+                newSubIDSelection: null,
+            });
+        }
     }
 
     handleHashClick(subID) {
-        let newSelection = (subID === this.state.selectedSubID) ? "" : subID;
+        let newSelection = (subID === this.urlSubID()) ? "" : subID;
 
         this.setState({
-            selectedSubID: newSelection,
+            newSubIDSelection: newSelection,
             revealInput: "",
         });
     }
@@ -59,7 +65,15 @@ class SubmissionsList extends Component {
 
         let encodedRevelation = this.utils.toHex(this.state.revealInput);
 
-        this.bankshot.methods.revealSubmission.cacheSend(this.state.selectedSubID, encodedRevelation);
+        this.bankshot.methods.revealSubmission.cacheSend(this.urlSubID(), encodedRevelation);
+    }
+
+    urlSubID() {
+        if (undefined === this.props.match.params.subid) {
+            return "";
+        }
+
+        return this.props.match.params.subid;
     }
 
     submissions() {
@@ -132,7 +146,18 @@ class SubmissionsList extends Component {
     }
     
     render() {
-        let hashList = this.submissions().map( (submission, subID) => {
+        if (null !== this.state.newSubIDSelection) {
+            let newURL = "/" + this.state.newSubIDSelection;
+
+            return (
+                <Redirect push to={newURL} />
+            );
+        }
+
+        let selectedSubID = this.urlSubID();
+        let submissions = this.submissions();
+
+        let hashList = submissions.map( (submission, subID) => {
                         subID = subID.toString();
 
                         let depositString = this.utils.fromWei(submission.deposit, "ether");
@@ -156,7 +181,7 @@ class SubmissionsList extends Component {
                             pubDate = "Published: " + date.toLocaleDateString();
                         }
 
-                        if (this.state.selectedSubID === subID) {
+                        if (this.urlSubID() === subID) {
                             className += " active";
                         }
 
@@ -183,8 +208,8 @@ class SubmissionsList extends Component {
 
         var revealInterface = "";
 
-        if (this.state.selectedSubID.length > 0) {
-            let revelation = this.revelationFor(this.state.selectedSubID);
+        if (selectedSubID.length > 0 && submissions[selectedSubID]) {
+            let revelation = this.revelationFor(selectedSubID);
 
             if (revelation !== null) {
                 let revelationText = this.utils.hexToString(revelation.returnValues.revelation);
@@ -200,7 +225,7 @@ class SubmissionsList extends Component {
                     </div>
                 );
             } else {
-                let selectedHash = this.submissions()[this.state.selectedSubID].hash;
+                let selectedHash = submissions[selectedSubID].hash;
                 let revealInputHash = this.utils.soliditySha3({type: 'string', value: this.state.revealInput});
                 let isCorrectRevelation = (selectedHash === revealInputHash);
 

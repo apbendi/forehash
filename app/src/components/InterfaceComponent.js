@@ -20,6 +20,7 @@ class InterfaceComponent extends Component {
           <Navigation />
           <Switch>
             <Route path="/" component={SubmissionsList} exact />
+            <Route path="/:subid(\d+)" component={SubmissionsList} />
             <Route path="/new" component={SubmissionFlow} />
             <Route component={NotFound} />
           </Switch>
