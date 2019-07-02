@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { drizzleConnect } from 'drizzle-react';
 import PropTypes from 'prop-types';
 import { Button, Container, Row, Col, ListGroup, Card } from 'react-bootstrap';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import HashSpan from '../HashSpan';
 import { LinkContainer } from 'react-router-bootstrap'
 
@@ -281,6 +281,14 @@ class SubmissionsList extends Component {
                             {revealLabelAndDate}
                         </Card.Text>
                         {revelationInterface}
+                    </Card.Body>
+                </Card>
+            );
+        } else {
+            detailInterface =(
+                <Card className="h-25">
+                    <Card.Body>
+                        <big>Select an existing prediction or <Link to="/new">add a new one</Link>.</big>
                     </Card.Body>
                 </Card>
             );
