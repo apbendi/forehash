@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import { drizzleConnect } from 'drizzle-react';
 import PropTypes from 'prop-types';
-import { Button, Form, Container, Row, Col, ListGroup } from 'react-bootstrap';
+import { Button, Container, Row, Col, ListGroup, Card } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 import HashSpan from '../HashSpan';
+import { LinkContainer } from 'react-router-bootstrap'
 
 class SubmissionsList extends Component {
+
+    // LIFECYCLE
 
     constructor(props, context) {
         super(props);
@@ -24,6 +27,7 @@ class SubmissionsList extends Component {
         this.revelations = this.revelations.bind(this);
         this.revelationFor = this.revelationFor.bind(this);
         this.publications = this.publications.bind(this);
+        this.publicationDateStringFor = this.publicationDateStringFor.bind(this);
         this.handleHashClick = this.handleHashClick.bind(this);
         this.handleRevealInput = this.handleRevealInput.bind(this);
         this.handleRevealClick = this.handleRevealClick.bind(this);
@@ -42,6 +46,8 @@ class SubmissionsList extends Component {
             });
         }
     }
+
+    // HANDLERS
 
     handleHashClick(subID) {
         let newSelection = (subID === this.urlSubID()) ? "" : subID;
@@ -67,6 +73,8 @@ class SubmissionsList extends Component {
 
         this.bankshot.methods.revealSubmission.cacheSend(this.urlSubID(), encodedRevelation);
     }
+
+    // DATA DERIVATION
 
     urlSubID() {
         if (undefined === this.props.match.params.subid) {
@@ -109,14 +117,14 @@ class SubmissionsList extends Component {
 
     revelations() {
         return this.props.bankshotState.events.filter( event => {
-            return (event.event === 'Revelation' && 
+            return (event.event === 'Revelation' &&
                     event.returnValues.user === this.props.account);
         });
     }
 
     publications() {
         return this.props.bankshotState.events.filter( event => {
-            return (event.event === 'Publication' && 
+            return (event.event === 'Publication' &&
                     event.returnValues.user === this.props.account);
         });
     }
@@ -145,6 +153,17 @@ class SubmissionsList extends Component {
         }
     }
 
+    publicationDateStringFor(subID) {
+        let publication = this.publicationsFor(subID);
+
+        if (null === publication) {
+            return "";
+        }
+
+        let date = new Date(1000 * parseInt(publication.returnValues.date));
+        return date.toLocaleDateString();
+    }
+
     render() {
         if (null !== this.state.newSubIDSelection) {
             let newURL = "/" + this.state.newSubIDSelection;
@@ -163,12 +182,10 @@ class SubmissionsList extends Component {
                         let depositString = this.utils.fromWei(submission.deposit, "ether");
 
                         var className = "list-group-item list-group-item-action flex-column align-items-start";
-                        var pubDate = "";
                         var badge = "";
                         var revealDate = "";
 
                         let revelation = this.revelationFor(subID);
-                        let publication = this.publicationsFor(subID);
 
                         if (null !== revelation) {
                             badge = (<span className="badge badge-warning badge-pill">Revealed</span>);
@@ -176,9 +193,10 @@ class SubmissionsList extends Component {
                             revealDate = "Revealed: " + date.toLocaleDateString();
                         }
 
-                        if (null !== publication) {
-                            let date = new Date(1000 * parseInt(publication.returnValues.date));
-                            pubDate = "Published: " + date.toLocaleDateString();
+                        var pubDate = this.publicationDateStringFor(subID);
+
+                        if ("" !== pubDate) {
+                            pubDate = "Published: " + pubDate;
                         }
 
                         if (this.urlSubID() === subID) {
@@ -206,7 +224,7 @@ class SubmissionsList extends Component {
                         );
                     });
 
-        var revealInterface = "";
+        var detailInterface = "";
 
         if (selectedSubID.length > 0 && submissions[selectedSubID]) {
             let revelation = this.revelationFor(selectedSubID);
@@ -214,7 +232,7 @@ class SubmissionsList extends Component {
             if (revelation !== null) {
                 let revelationText = this.utils.hexToString(revelation.returnValues.revelation);
 
-                revealInterface = (
+                detailInterface = (
                     <div>
                         <h3>Revealed Prediction</h3>
                         <div className="card">
@@ -225,26 +243,26 @@ class SubmissionsList extends Component {
                     </div>
                 );
             } else {
-                let selectedHash = submissions[selectedSubID].hash;
-                let revealInputHash = this.utils.soliditySha3({type: 'string', value: this.state.revealInput});
-                let isCorrectRevelation = (selectedHash === revealInputHash);
+                let newPath = this.props.location.pathname + "/reveal";
+                let hash = submissions[selectedSubID].hash;
+                let depositString = this.utils.fromWei(submissions[selectedSubID].deposit, 'ether');
+                let pubString = this.publicationDateStringFor(selectedSubID);
 
-                revealInterface = (
-                    <Form>
-                        <h3>Reveal Prediction</h3>
-                        <Form.Group controlId="formRevealSubmission">
-                            <Form.Control as="textarea"
-                                            rows="2"
-                                            className="mb-3"
-                                            value={this.state.revealInput}
-                                            onChange={this.handleRevealInput} />
-                            <Button variant="primary"
-                                    disabled={!isCorrectRevelation}
-                                    onClick={this.handleRevealClick}>
-                                Reveal This Submission
-                            </Button>
-                        </Form.Group>
-                    </Form>
+                detailInterface = (
+                    <Card>
+                        <Card.Header>
+                            <HashSpan hash={hash} />
+                        </Card.Header>
+                        <Card.Body>
+                            <Card.Text>
+                                Published: {pubString}<br />
+                                Deposit: {depositString} ETH
+                            </Card.Text>
+                            <LinkContainer to={newPath}>
+                                <Button>Reveal This Prediction</Button>
+                            </LinkContainer>
+                        </Card.Body>
+                    </Card>
                 );
             }
         }
@@ -253,13 +271,12 @@ class SubmissionsList extends Component {
             <Container>
                 <Row>
                     <Col md="4" sm="12">
-                        <h2>Past Predictions</h2>
                         <ListGroup>
                             {hashList}
                         </ListGroup>
                     </Col>
                     <Col md="8" sm="12">
-                        {revealInterface}
+                        {detailInterface}
                     </Col>
                 </Row>
             </Container>
