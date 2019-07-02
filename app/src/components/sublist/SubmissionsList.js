@@ -160,9 +160,27 @@ class SubmissionsList extends Component {
             return "";
         }
 
-        let date = new Date(1000 * parseInt(publication.returnValues.date));
+        return this.dateForTimestamp(publication.returnValues.date);
+    }
+
+    revelationDateStringFor(subID) {
+        let reveal = this.revelationFor(subID);
+
+        if (null === reveal) {
+            return "";
+        }
+
+        return this.dateForTimestamp(reveal.returnValues.date);
+    }
+
+    // HELPERS
+
+    dateForTimestamp(timestamp) {
+        let date = new Date(1000 * parseInt(timestamp));
         return date.toLocaleDateString();
     }
+
+    // RENDER
 
     render() {
         if (null !== this.state.newSubIDSelection) {
@@ -183,20 +201,12 @@ class SubmissionsList extends Component {
 
                         var className = "list-group-item list-group-item-action flex-column align-items-start";
                         var badge = "";
-                        var revealDate = "";
-
-                        let revelation = this.revelationFor(subID);
-
-                        if (null !== revelation) {
-                            badge = (<span className="badge badge-warning badge-pill">Revealed</span>);
-                            let date = new Date(1000 * parseInt(revelation.returnValues.date));
-                            revealDate = "Revealed: " + date.toLocaleDateString();
-                        }
 
                         var pubDate = this.publicationDateStringFor(subID);
+                        let revelationDate = this.revelationDateStringFor(subID);
 
-                        if ("" !== pubDate) {
-                            pubDate = "Published: " + pubDate;
+                        if ("" !== revelationDate) {
+                            badge = (<span className="badge badge-warning badge-pill">Revealed</span>);
                         }
 
                         if (this.urlSubID() === subID) {
@@ -217,9 +227,9 @@ class SubmissionsList extends Component {
                                     <HashSpan hash={submission.hash} />
                                     <span>{badge}</span>
                                 </div>
-                                <span>{pubDate}</span><br />
+                                <span>Published: {pubDate}</span><br />
                                 <span>Deposit: {depositString} ETH</span><br />
-                                <span>{revealDate}</span>
+                                <span>Revealed: {revelationDate}</span>
                             </a>
                         );
                     });
@@ -227,44 +237,53 @@ class SubmissionsList extends Component {
         var detailInterface = "";
 
         if (selectedSubID.length > 0 && submissions[selectedSubID]) {
+            let hash = submissions[selectedSubID].hash;
+            let depositString = this.utils.fromWei(submissions[selectedSubID].deposit, 'ether');
+            let pubString = this.publicationDateStringFor(selectedSubID);
+
             let revelation = this.revelationFor(selectedSubID);
+            var revelationInterface = "";
+            var revealLabelAndDate = "";
+            var depositLabel = "";
 
             if (revelation !== null) {
                 let revelationText = this.utils.hexToString(revelation.returnValues.revelation);
+                revealLabelAndDate = "Revealed: " + this.revelationDateStringFor(selectedSubID);
+                depositLabel = "Deposit Returned: ";
 
-                detailInterface = (
-                    <div>
-                        <h3>Revealed Prediction</h3>
-                        <div className="card">
-                            <div className="card-body">
-                                {revelationText}
-                            </div>
-                        </div>
-                    </div>
-                );
-            } else {
-                let newPath = this.props.location.pathname + "/reveal";
-                let hash = submissions[selectedSubID].hash;
-                let depositString = this.utils.fromWei(submissions[selectedSubID].deposit, 'ether');
-                let pubString = this.publicationDateStringFor(selectedSubID);
-
-                detailInterface = (
-                    <Card>
-                        <Card.Header>
-                            <HashSpan hash={hash} />
-                        </Card.Header>
+                revelationInterface = (
+                    <Card className="bg-light">
                         <Card.Body>
-                            <Card.Text>
-                                Published: {pubString}<br />
-                                Deposit: {depositString} ETH
-                            </Card.Text>
-                            <LinkContainer to={newPath}>
-                                <Button>Reveal This Prediction</Button>
-                            </LinkContainer>
+                            <big>{revelationText}</big>
                         </Card.Body>
                     </Card>
                 );
+            } else {
+                let newPath = this.props.location.pathname + "/reveal";
+                depositLabel = "Deposit Locked: ";
+
+                revelationInterface = (
+                    <LinkContainer to={newPath}>
+                        <Button>Reveal This Prediction</Button>
+                    </LinkContainer>
+                );
             }
+
+            detailInterface = (
+                <Card>
+                    <Card.Header>
+                        <HashSpan hash={hash} />
+                    </Card.Header>
+                    <Card.Body>
+                        <Card.Text>
+                            Published: {pubString}<br />
+                            {depositLabel}{depositString} ETH<br />
+                            {revealLabelAndDate}
+                        </Card.Text>
+                        {revelationInterface}
+                    </Card.Body>
+                </Card>
+            );
         }
 
         return (
