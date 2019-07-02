@@ -194,6 +194,28 @@ class SubmissionsList extends Component {
         let selectedSubID = this.urlSubID();
         let submissions = this.submissions();
 
+        if (submissions.length <= 0) {
+            return (
+                <Container>
+                    <Row>
+                        <Col md="1" sm="0"></Col>
+                        <Col md="10" sm="12">
+                            <Card>
+                                <Card.Body className="text-center">
+                                    <Card.Text>
+                                        <big>This account has not published any predictions yet.</big>
+                                    </Card.Text>
+                                    <LinkContainer to="/new">
+                                        <Button>Publish First Prediction</Button>
+                                    </LinkContainer>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    </Row>
+                </Container>
+            );
+        }
+
         let hashList = submissions.map( (submission, subID) => {
                         subID = subID.toString();
 
