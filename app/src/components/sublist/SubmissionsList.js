@@ -301,6 +301,11 @@ class SubmissionsList extends Component {
                         <ListGroup>
                             {hashList}
                         </ListGroup>
+                        <div className="text-center mt-2">
+                            <LinkContainer to="/new">
+                                <Button>[+] New Prediciton</Button>
+                            </LinkContainer>
+                        </div>
                     </Col>
                     <Col md="8" sm="12">
                         {detailInterface}
