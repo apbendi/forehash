@@ -21,9 +21,9 @@ class InterfaceComponent extends Component {
         <div className="App">
           <Navigation />
           <Switch>
-            <Route path="/" component={SubmissionsList} exact />
+            <Route path="/" render={(props) => <SubmissionsContainer {...props} component={SubmissionsList}/>} exact />
             <Route path="/:subid(\d+)/reveal" render={(props) => <SubmissionsContainer {...props} component={RevelationForm}/>} />
-            <Route path="/:subid(\d+)" component={SubmissionsList} />
+            <Route path="/:subid(\d+)" render={(props) => <SubmissionsContainer {...props} component={SubmissionsList}/>} />
             <Route path="/new" component={SubmissionFlow} />
             <Route component={NotFound} />
           </Switch>
@@ -34,4 +34,3 @@ class InterfaceComponent extends Component {
 }
 
 export default InterfaceComponent;
- 

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { drizzleConnect } from 'drizzle-react';
 import PropTypes from 'prop-types';
 import { Button, Container, Row, Col, ListGroup, Card } from 'react-bootstrap';
 import { Redirect, Link } from 'react-router-dom';
@@ -19,29 +18,16 @@ class SubmissionsList extends Component {
         this.utils = context.drizzle.web3.utils;
 
         this.state = {
-            submissionsKey: this.bankshot.methods.submissionsForAddress.cacheCall(props.account),
-            revealInput: "",
             newSubIDSelection: null,
         }
 
         this.urlSubID = this.urlSubID.bind(this);
-        this.submissions = this.submissions.bind(this);
-        this.revelations = this.revelations.bind(this);
         this.revelationFor = this.revelationFor.bind(this);
-        this.publications = this.publications.bind(this);
         this.publicationDateStringFor = this.publicationDateStringFor.bind(this);
         this.handleHashClick = this.handleHashClick.bind(this);
-        this.handleRevealInput = this.handleRevealInput.bind(this);
-        this.handleRevealClick = this.handleRevealClick.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.account !== this.props.account) {
-            this.setState({
-                submissionsKey: this.bankshot.methods.submissionsForAddress.cacheCall(nextProps.account),
-            });
-        }
-
         if (null !== this.state.newSubIDSelection) {
             this.setState({
                 newSubIDSelection: null,
@@ -56,24 +42,7 @@ class SubmissionsList extends Component {
 
         this.setState({
             newSubIDSelection: newSelection,
-            revealInput: "",
         });
-    }
-
-    handleRevealInput(event) {
-        event.preventDefault();
-
-        this.setState({
-            revealInput: event.currentTarget.value,
-        });
-    }
-
-    handleRevealClick(event) {
-        event.preventDefault();
-
-        let encodedRevelation = this.utils.toHex(this.state.revealInput);
-
-        this.bankshot.methods.revealSubmission.cacheSend(this.urlSubID(), encodedRevelation);
     }
 
     // DATA DERIVATION
@@ -86,53 +55,8 @@ class SubmissionsList extends Component {
         return this.props.match.params.subid;
     }
 
-    submissions() {
-        if (!this.props.bankshotState.initialized) {
-            return [];
-        }
-
-        if ( !(this.state.submissionsKey in this.props.bankshotState.submissionsForAddress) ) {
-            return [];
-        }
-
-        let contractValue = this.props.bankshotState.submissionsForAddress[this.state.submissionsKey].value;
-
-        if(!contractValue || !contractValue.hashes || !contractValue.deposits) {
-            return [];
-        }
-
-        if (contractValue.hashes.length !== contractValue.deposits.length) {
-            throw new Error("Invalid response from contract call");
-        }
-
-        var submissions = [];
-
-        for (var i = 0; i < contractValue.hashes.length; i++){
-            submissions[i] = {
-                                hash: contractValue.hashes[i],
-                                deposit: contractValue.deposits[i],
-                            }
-        }
-
-        return submissions;
-    }
-
-    revelations() {
-        return this.props.bankshotState.events.filter( event => {
-            return (event.event === 'Revelation' &&
-                    event.returnValues.user === this.props.account);
-        });
-    }
-
-    publications() {
-        return this.props.bankshotState.events.filter( event => {
-            return (event.event === 'Publication' &&
-                    event.returnValues.user === this.props.account);
-        });
-    }
-
     revelationFor(subID) {
-        let reveals = this.revelations().filter(revelation => {
+        let reveals = this.props.revelations.filter(revelation => {
             return revelation.returnValues.subID === subID;
         });
 
@@ -144,7 +68,7 @@ class SubmissionsList extends Component {
     }
 
     publicationsFor(subID) {
-        let pubs = this.publications().filter(publication => {
+        let pubs = this.props.publications.filter(publication => {
             return publication.returnValues.subID === subID;
         });
 
@@ -193,8 +117,16 @@ class SubmissionsList extends Component {
             );
         }
 
+        if (this.props.isLoading) {
+            return (
+                <div>
+                    Loading...
+                </div>
+            );
+        }
+
         let selectedSubID = this.urlSubID();
-        let submissions = this.submissions();
+        let submissions = this.props.submissions;
 
         if (submissions.length <= 0) {
             return (
@@ -305,11 +237,4 @@ SubmissionsList.contextTypes = {
     drizzle: PropTypes.object,
 }
 
-let mapStateToProps = state => {
-    return {
-        account: state.accounts[0],
-        bankshotState: state.contracts.Bankshot,
-    };
-}
-
-export default drizzleConnect(SubmissionsList, mapStateToProps, null);
+export default SubmissionsList;
