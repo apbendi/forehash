@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { Button, Container, Row, Col, ListGroup, Card } from 'react-bootstrap';
 import { Redirect, Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap'
-import HashSpan from '../HashSpan';
 import SubmissionCell from './SubmissionCell';
+import SubmissionDetail from './SubmissionDetail';
 import EmptyScreen from './EmptyScreen';
 
 class SubmissionsList extends Component {
@@ -14,7 +14,6 @@ class SubmissionsList extends Component {
     constructor(props, context) {
         super(props);
 
-        this.bankshot = context.drizzle.contracts.Bankshot;
         this.utils = context.drizzle.web3.utils;
 
         this.state = {
@@ -23,6 +22,7 @@ class SubmissionsList extends Component {
 
         this.urlSubID = this.urlSubID.bind(this);
         this.publicationDateStringFor = this.publicationDateStringFor.bind(this);
+        this.revelationDateStringFor = this.revelationDateStringFor.bind(this);
         this.handleHashClick = this.handleHashClick.bind(this);
     }
 
@@ -128,57 +128,19 @@ class SubmissionsList extends Component {
 
         var detailInterface = "";
 
-        if (selectedSubID.length > 0 && submissions[selectedSubID]) {
-            let hash = submissions[selectedSubID].hash;
-            let depositString = this.utils.fromWei(submissions[selectedSubID].deposit, 'ether');
-            let pubString = this.publicationDateStringFor(selectedSubID);
+        let hasSelectedSub = selectedSubID.length > 0 && submissions[selectedSubID];
 
-            let revelation = this.props.revelationFor(selectedSubID);
-            var revelationInterface = "";
-            var revealLabelAndDate = "";
-            var depositLabel = "";
-
-            if (revelation !== null) {
-                let revelationText = this.utils.hexToString(revelation.returnValues.revelation);
-                revealLabelAndDate = "Revealed: " + this.revelationDateStringFor(selectedSubID);
-                depositLabel = "Deposit Returned: ";
-
-                revelationInterface = (
-                    <Card className="bg-light">
-                        <Card.Body>
-                            <big>{revelationText}</big>
-                        </Card.Body>
-                    </Card>
-                );
-            } else {
-                let newPath = this.props.location.pathname + "/reveal";
-                depositLabel = "Deposit Locked: ";
-
-                revelationInterface = (
-                    <LinkContainer to={newPath}>
-                        <Button>Reveal This Prediction</Button>
-                    </LinkContainer>
-                );
-            }
-
+        if (hasSelectedSub) {
             detailInterface = (
-                <Card>
-                    <Card.Header>
-                        <HashSpan hash={hash} />
-                    </Card.Header>
-                    <Card.Body>
-                        <Card.Text>
-                            Published: {pubString}<br />
-                            {depositLabel}{depositString} ETH<br />
-                            {revealLabelAndDate}
-                        </Card.Text>
-                        {revelationInterface}
-                    </Card.Body>
-                </Card>
+                <SubmissionDetail submission={submissions[selectedSubID]}
+                                    publication={this.props.publicationFor(selectedSubID)}
+                                    revelation={this.props.revelationFor(selectedSubID)}
+                                    currentPath={this.props.location.pathname}
+                            />
             );
         } else {
             detailInterface =(
-                <Card className="h-25">
+                <Card className="">
                     <Card.Body>
                         <big>Select an existing prediction or <Link to="/new">add a new one</Link>.</big>
                     </Card.Body>
