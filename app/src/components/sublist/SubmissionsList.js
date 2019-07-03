@@ -3,8 +3,9 @@ import { drizzleConnect } from 'drizzle-react';
 import PropTypes from 'prop-types';
 import { Button, Container, Row, Col, ListGroup, Card } from 'react-bootstrap';
 import { Redirect, Link } from 'react-router-dom';
-import HashSpan from '../HashSpan';
 import { LinkContainer } from 'react-router-bootstrap'
+import HashSpan from '../HashSpan';
+import SubmissionCell from './SubmissionCell';
 
 class SubmissionsList extends Component {
 
@@ -167,7 +168,7 @@ class SubmissionsList extends Component {
         let reveal = this.revelationFor(subID);
 
         if (null === reveal) {
-            return "";
+            return null;
         }
 
         return this.dateForTimestamp(reveal.returnValues.date);
@@ -218,41 +219,18 @@ class SubmissionsList extends Component {
 
         let hashList = submissions.map( (submission, subID) => {
                         subID = subID.toString();
-
                         let depositString = this.utils.fromWei(submission.deposit, "ether");
 
-                        var className = "list-group-item list-group-item-action flex-column align-items-start";
-                        var badge = "";
-
-                        var pubDate = this.publicationDateStringFor(subID);
-                        let revelationDate = this.revelationDateStringFor(subID);
-
-                        if ("" !== revelationDate) {
-                            badge = (<span className="badge badge-warning badge-pill">Revealed</span>);
-                        }
-
-                        if (this.urlSubID() === subID) {
-                            className += " active";
-                        }
-
                         return (
-                            <a href="/"
-                                    className={className}
-                                    key={subID}
-                                    onClick={(event) => {
-                                            event.preventDefault();
-                                            this.handleHashClick(subID);
-                                        }
-                                    }>
-
-                                <div className="d-flex w-100 justify-content-between">
-                                    <HashSpan hash={submission.hash} />
-                                    <span>{badge}</span>
-                                </div>
-                                <span>Published: {pubDate}</span><br />
-                                <span>Deposit: {depositString} ETH</span><br />
-                                <span>Revealed: {revelationDate}</span>
-                            </a>
+                            <SubmissionCell key={subID}
+                                            subID={subID}
+                                            onSelection={this.handleHashClick}
+                                            isSelected={this.urlSubID() === subID}
+                                            hash={submission.hash}
+                                            pubDate={this.publicationDateStringFor(subID)}
+                                            deposit={depositString}
+                                            revelationDate={this.revelationDateStringFor(subID)}
+                                    />
                         );
                     });
 
