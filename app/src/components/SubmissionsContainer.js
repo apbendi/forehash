@@ -13,7 +13,7 @@ class SubmissionsContainer extends Component {
         this.utils = context.drizzle.web3.utils;
 
         this.state = {
-            submissionsKey: this.bankshot.methods.submissionsForAddress.cacheCall(props.account),
+            submissionsKey: this.bankshot.methods.submissionsForAddress.cacheCall(this.props.account),
         }
 
         this.isLoading = this.isLoading.bind(this);
@@ -142,9 +142,13 @@ SubmissionsContainer.contextTypes = {
     drizzle: PropTypes.object,
 }
 
+SubmissionsContainer.propTypes = {
+    account: PropTypes.string.isRequired,
+}
+
 let mapStateToProps = state => {
     return {
-        account: state.accounts[0],
+        activeAccount: state.accounts[0],
         bankshotState: state.contracts.Bankshot,
     };
 }

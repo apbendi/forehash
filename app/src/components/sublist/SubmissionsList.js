@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Container, Row, Col, ListGroup, Card } from 'react-bootstrap';
-import { Redirect, Link } from 'react-router-dom';
+import { Button, Container, Row, Col, ListGroup } from 'react-bootstrap';
+import { Redirect } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap'
 import SubmissionCell from './SubmissionCell';
 import SubmissionDetail from './SubmissionDetail';
 import EmptyScreen from './EmptyScreen';
+import EmptyDetail from './EmptyDetail';
 
 class SubmissionsList extends Component {
 
@@ -26,7 +27,7 @@ class SubmissionsList extends Component {
         this.handleHashClick = this.handleHashClick.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(_nextProps) {
         if (null !== this.state.newSubIDSelection) {
             this.setState({
                 newSubIDSelection: null,
@@ -85,7 +86,7 @@ class SubmissionsList extends Component {
 
     render() {
         if (null !== this.state.newSubIDSelection) {
-            let newURL = "/" + this.state.newSubIDSelection;
+            let newURL = "/" + this.props.match.params.account + "/" + this.state.newSubIDSelection;
 
             return (
                 <Redirect push to={newURL} />
@@ -129,22 +130,31 @@ class SubmissionsList extends Component {
         var detailInterface = "";
 
         let hasSelectedSub = selectedSubID.length > 0 && submissions[selectedSubID];
+        let isActiveAccount = (this.props.activeAccount === this.props.account);
 
         if (hasSelectedSub) {
+            let revealPath = isActiveAccount ? ("/" + selectedSubID + "/reveal") : null;
+
             detailInterface = (
                 <SubmissionDetail submission={submissions[selectedSubID]}
                                     publication={this.props.publicationFor(selectedSubID)}
                                     revelation={this.props.revelationFor(selectedSubID)}
-                                    currentPath={this.props.location.pathname}
+                                    revealPath={revealPath}
                             />
             );
         } else {
-            detailInterface =(
-                <Card className="">
-                    <Card.Body>
-                        <big>Select an existing prediction or <Link to="/new">add a new one</Link>.</big>
-                    </Card.Body>
-                </Card>
+            detailInterface = (<EmptyDetail isActiveAccount={isActiveAccount} />);
+        }
+
+        var newButton = "";
+
+        if (isActiveAccount) {
+            newButton = (
+                <div className="text-center mt-2">
+                    <LinkContainer to="/new">
+                        <Button>[+] New Prediciton</Button>
+                    </LinkContainer>
+                </div>
             );
         }
 
@@ -155,11 +165,7 @@ class SubmissionsList extends Component {
                         <ListGroup>
                             {hashList}
                         </ListGroup>
-                        <div className="text-center mt-2">
-                            <LinkContainer to="/new">
-                                <Button>[+] New Prediciton</Button>
-                            </LinkContainer>
-                        </div>
+                        {newButton}
                     </Col>
                     <Col md="8" sm="12">
                         {detailInterface}

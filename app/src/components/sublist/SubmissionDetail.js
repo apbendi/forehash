@@ -20,9 +20,10 @@ const SubmissionDetail = (props, context) => {
     var depositLabel = "";
 
     if (props.revelation) {
+        depositLabel = "Deposit Returned: ";
+
         let revelationText = utils.hexToString(props.revelation.returnValues.revelation);
         revealLabelAndDate = "Revealed: " + dateForTimestamp(props.revelation.returnValues.date);
-        depositLabel = "Deposit Returned: ";
 
         revelationInterface = (
             <Card className="bg-light">
@@ -32,14 +33,15 @@ const SubmissionDetail = (props, context) => {
             </Card>
         );
     } else {
-        let newPath = props.currentPath + "/reveal";
         depositLabel = "Deposit Locked: ";
 
-        revelationInterface = (
-            <LinkContainer to={newPath}>
-                <Button>Reveal This Prediction</Button>
-            </LinkContainer>
-        );
+        if (props.revealPath) {
+            revelationInterface = (
+                <LinkContainer to={props.revealPath}>
+                    <Button>Reveal This Prediction</Button>
+                </LinkContainer>
+            );
+        }
     }
 
     return (
@@ -62,7 +64,7 @@ const SubmissionDetail = (props, context) => {
 SubmissionDetail.propTypes = {
     submission: PropTypes.object.isRequired,
     publication: PropTypes.object.isRequired,
-    currentPath: PropTypes.string,
+    revealPath: PropTypes.string,
     revelation: PropTypes.object,
 }
 

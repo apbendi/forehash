@@ -6,24 +6,40 @@ import RevelationForm from './revelation/RevelationForm';
 import NotFound from './NotFound';
 import Navigation from './Navigation';
 import SubmissionsContainer from './SubmissionsContainer';
+import Home from './Home';
 
 class InterfaceComponent extends Component {
 
-  constructor(props, context) {
+  constructor(props, _context) {
     super(props);
-
-    this.accounts = props.accounts;
   }
 
   render() {
     return (
       <BrowserRouter>
         <div className="App">
-          <Navigation />
+          <Navigation account={this.props.accounts[0]} />
           <Switch>
-            <Route path="/" render={(props) => <SubmissionsContainer {...props} component={SubmissionsList}/>} exact />
-            <Route path="/:subid(\d+)/reveal" render={(props) => <SubmissionsContainer {...props} component={RevelationForm}/>} />
-            <Route path="/:subid(\d+)" render={(props) => <SubmissionsContainer {...props} component={SubmissionsList}/>} />
+            <Route path="/" component={Home} exact />
+            {/* <Route path="/" render={(props) => <SubmissionsContainer {...props} component={Home}/>} exact /> */}
+
+            <Route path="/:subid(\d+)/reveal" render={(props) => {
+                        return (<SubmissionsContainer {...props}
+                                                      account={this.props.accounts[0]}
+                                                      component={RevelationForm}/>);
+                      }} />
+
+            <Route path="/:account(0x[a-fA-F0-9]{40})/:subid(\d+)" render={(props) => {
+                        return (<SubmissionsContainer {...props}
+                                                      account={props.match.params.account}
+                                                      component={SubmissionsList}/>);
+                      }} />
+
+            <Route path="/:account(0x[a-fA-F0-9]{40})" render={(props) => {
+                        return (<SubmissionsContainer {...props}
+                                                      account={props.match.params.account}
+                                                      component={SubmissionsList}/>);
+                      }}/>
             <Route path="/new" component={SubmissionFlow} />
             <Route component={NotFound} />
           </Switch>
