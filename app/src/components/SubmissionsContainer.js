@@ -20,6 +20,8 @@ class SubmissionsContainer extends Component {
         this.submissions = this.submissions.bind(this);
         this.revelations = this.revelations.bind(this);
         this.publications = this.publications.bind(this);
+        this.revelationFor = this.revelationFor.bind(this);
+        this.publicationFor = this.publicationFor.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -95,6 +97,30 @@ class SubmissionsContainer extends Component {
         });
     }
 
+    revelationFor(subID) {
+        let reveals = this.revelations().filter(revelation => {
+            return revelation.returnValues.subID === subID;
+        });
+
+        if (reveals.length > 0) {
+            return reveals[0];
+        } else {
+            return null;
+        }
+    }
+
+    publicationFor(subID) {
+        let pubs = this.publications().filter(publication => {
+            return publication.returnValues.subID === subID;
+        });
+
+        if (pubs.length > 0) {
+            return pubs[0];
+        } else {
+            return null;
+        }
+    }
+
     // RENDER
 
     render() {
@@ -105,6 +131,8 @@ class SubmissionsContainer extends Component {
                                     submissions={this.submissions()}
                                     publications={this.publications()}
                                     revelations={this.revelations()}
+                                    publicationFor={this.publicationFor}
+                                    revelationFor={this.revelationFor}
                                     />
         )
     }

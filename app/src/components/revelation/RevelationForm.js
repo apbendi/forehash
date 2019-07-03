@@ -21,10 +21,6 @@ class RevelationForm extends Component {
         this.handleRevealInput = this.handleRevealInput.bind(this);
         this.handleRevealClick = this.handleRevealClick.bind(this);
         this.urlSubID = this.urlSubID.bind(this);
-        this.hash = this.hash.bind(this);
-        this.deposit = this.deposit.bind(this);
-        this.publication = this.publication.bind(this);
-        this.revelation = this.revelation.bind(this);
     }
 
     handleRevealInput(event) {
@@ -53,42 +49,6 @@ class RevelationForm extends Component {
         return this.props.match.params.subid;
     }
 
-    hash() {
-        return this.props.submissions[this.urlSubID()].hash;
-    }
-
-    deposit() {
-        return this.props.submissions[this.urlSubID()].deposit;
-    }
-
-    publication() {
-        let subID = this.urlSubID();
-
-        let pubs = this.props.publications.filter(publication => {
-            return publication.returnValues.subID === subID;
-        });
-
-        if (pubs.length > 0) {
-            return pubs[0];
-        } else {
-            return null;
-        }
-    }
-
-    revelation() {
-        let subID = this.urlSubID();
-
-        let reveals = this.props.revelations.filter(revelation => {
-            return revelation.returnValues.subID === subID;
-        });
-
-        if (reveals.length > 0) {
-            return reveals[0];
-        } else {
-            return null;
-        }
-    }
-
     // HELPERS
 
     formatDate(timestamp) {
@@ -103,16 +63,20 @@ class RevelationForm extends Component {
             return (<div>Loading...</div>);
         }
 
-        if (null !== this.revelation()) {
+        let subID = this.urlSubID();
+
+        if (null !== this.props.revelationFor(subID)) {
             let path = "/" + this.urlSubID();
             return (<Redirect to={path} />);
         }
 
-        let hash = this.hash();
+        let submission = this.props.submissions[subID];
+        let publication = this.props.publicationFor(subID);
+
         let revealInputHash = this.utils.soliditySha3({type: 'string', value: this.state.revealInput});
-        let isCorrectRevelation = (hash === revealInputHash);
-        let pubDate = this.formatDate(this.publication().returnValues.date);
-        let depositString = this.utils.fromWei(this.deposit(), "ether");
+        let isCorrectRevelation = (submission.hash === revealInputHash);
+        let pubDate = this.formatDate(publication.returnValues.date);
+        let depositString = this.utils.fromWei(submission.deposit, "ether");
 
         return (
             <Container>
@@ -122,7 +86,7 @@ class RevelationForm extends Component {
                         <h3>Reveal Your Prediction</h3>
                         <Card className="mb-3">
                             <Card.Body>
-                                <Card.Title><HashSpan hash={hash} /></Card.Title>
+                                <Card.Title><HashSpan hash={submission.hash} /></Card.Title>
                                 <Card.Text className="text-muted">
                                     Published: {pubDate}<br />
                                     Deposit: {depositString} ETH<br />

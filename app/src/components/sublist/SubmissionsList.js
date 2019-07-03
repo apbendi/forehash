@@ -22,7 +22,6 @@ class SubmissionsList extends Component {
         }
 
         this.urlSubID = this.urlSubID.bind(this);
-        this.revelationFor = this.revelationFor.bind(this);
         this.publicationDateStringFor = this.publicationDateStringFor.bind(this);
         this.handleHashClick = this.handleHashClick.bind(this);
     }
@@ -55,32 +54,8 @@ class SubmissionsList extends Component {
         return this.props.match.params.subid;
     }
 
-    revelationFor(subID) {
-        let reveals = this.props.revelations.filter(revelation => {
-            return revelation.returnValues.subID === subID;
-        });
-
-        if (reveals.length > 0) {
-            return reveals[0];
-        } else {
-            return null;
-        }
-    }
-
-    publicationsFor(subID) {
-        let pubs = this.props.publications.filter(publication => {
-            return publication.returnValues.subID === subID;
-        });
-
-        if (pubs.length > 0) {
-            return pubs[0];
-        } else {
-            return null;
-        }
-    }
-
     publicationDateStringFor(subID) {
-        let publication = this.publicationsFor(subID);
+        let publication = this.props.publicationFor(subID);
 
         if (null === publication) {
             return "";
@@ -90,7 +65,7 @@ class SubmissionsList extends Component {
     }
 
     revelationDateStringFor(subID) {
-        let reveal = this.revelationFor(subID);
+        let reveal = this.props.revelationFor(subID);
 
         if (null === reveal) {
             return null;
@@ -158,7 +133,7 @@ class SubmissionsList extends Component {
             let depositString = this.utils.fromWei(submissions[selectedSubID].deposit, 'ether');
             let pubString = this.publicationDateStringFor(selectedSubID);
 
-            let revelation = this.revelationFor(selectedSubID);
+            let revelation = this.props.revelationFor(selectedSubID);
             var revelationInterface = "";
             var revealLabelAndDate = "";
             var depositLabel = "";
