@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Container, Row, Col, ListGroup, Card } from 'react-bootstrap';
-import { Redirect, Link } from 'react-router-dom';
+import { Button, Container, Row, Col, ListGroup } from 'react-bootstrap';
+import { Redirect } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap'
 import SubmissionCell from './SubmissionCell';
 import SubmissionDetail from './SubmissionDetail';
 import EmptyScreen from './EmptyScreen';
+import EmptyDetail from './EmptyDetail';
 
 class SubmissionsList extends Component {
 
@@ -26,7 +27,7 @@ class SubmissionsList extends Component {
         this.handleHashClick = this.handleHashClick.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(_nextProps) {
         if (null !== this.state.newSubIDSelection) {
             this.setState({
                 newSubIDSelection: null,
@@ -139,13 +140,7 @@ class SubmissionsList extends Component {
                             />
             );
         } else {
-            detailInterface =(
-                <Card className="">
-                    <Card.Body>
-                        <big>Select an existing prediction or <Link to="/new">add a new one</Link>.</big>
-                    </Card.Body>
-                </Card>
-            );
+            detailInterface = (<EmptyDetail />);
         }
 
         return (
