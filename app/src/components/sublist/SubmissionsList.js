@@ -159,7 +159,7 @@ class SubmissionsList extends Component {
         }
 
         return (
-            <Container>
+            <Container className="mt-3">
                 <Row>
                     <Col md="4" sm="12">
                         <ListGroup>

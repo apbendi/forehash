@@ -21,7 +21,6 @@ class InterfaceComponent extends Component {
           <Navigation account={this.props.accounts[0]} />
           <Switch>
             <Route path="/" component={Home} exact />
-            {/* <Route path="/" render={(props) => <SubmissionsContainer {...props} component={Home}/>} exact /> */}
 
             <Route path="/:subid(\d+)/reveal" render={(props) => {
                         return (<SubmissionsContainer {...props}

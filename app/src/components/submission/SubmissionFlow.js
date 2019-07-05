@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import { drizzleConnect } from 'drizzle-react';
 import { Redirect } from 'react-router-dom';
+import { Container } from 'react-bootstrap';
 import PredictionForm from './PredictionForm';
 import BackupPrediction from './BackupPrediction';
 import ConfirmForm from './ConfirmForm';
@@ -105,13 +106,13 @@ class SubmissionFlow extends Component {
         this.setState({
             flowStep: "BACKUP",
             predictionText: prediction,
-            depositAmount: deposit, 
+            depositAmount: deposit,
         });
     }
 
     backupContinue() {
         this.setState({
-            flowStep: "CONFIRM", 
+            flowStep: "CONFIRM",
         });
     }
 
@@ -219,7 +220,7 @@ class SubmissionFlow extends Component {
     }
 
     // RENDER
-    
+
     render() {
         let ethVig  = this.ethVig();
         let minEthDeposit = this.minEthDeposit();
@@ -238,12 +239,12 @@ class SubmissionFlow extends Component {
                         amountValidator={this.validationResponseForDeposit}
                         onSubmit={this.predictionCallback}
                         isEnabled={isSubmissionEnabled} />
-                );   
+                );
 
                 break;
             case "BACKUP":
                 header = "Backup Your Prediction";
-                
+
                 stepComponent =(
                     <BackupPrediction
                         fullText={this.fullText()}
@@ -293,12 +294,12 @@ class SubmissionFlow extends Component {
             default:
                 throw new Error("Illegal State");
         }
-        
+
         return (
-            <div>
+            <Container className="mt-3">
                 <h2>{header}</h2>
                 {stepComponent}
-            </div>
+            </Container>
         )
     }
 }
