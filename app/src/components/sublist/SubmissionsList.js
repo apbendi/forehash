@@ -7,6 +7,7 @@ import SubmissionCell from './SubmissionCell';
 import SubmissionDetail from './SubmissionDetail';
 import EmptyScreen from './EmptyScreen';
 import EmptyDetail from './EmptyDetail';
+import AccountHeader from './AccountHeader';
 
 class SubmissionsList extends Component {
 
@@ -160,7 +161,13 @@ class SubmissionsList extends Component {
 
         return (
             <Container className="mt-3">
-                <Row>
+                <div className="border-bottom p-1">
+                    <AccountHeader
+                        account={this.props.account}
+                        submissions={this.props.submissions}
+                        revelations={this.props.revelations} />
+                </div>
+                <Row className="mt-3">
                     <Col md="4" sm="12">
                         <ListGroup>
                             {hashList}

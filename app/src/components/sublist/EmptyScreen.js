@@ -4,7 +4,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 
 const EmptyScreen = () => {
     return (
-        <Container>
+        <Container className="mt-4">
             <Row>
                 <Col md="1" sm="0"></Col>
                 <Col md="10" sm="12">
