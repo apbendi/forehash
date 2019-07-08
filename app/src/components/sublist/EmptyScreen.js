@@ -1,8 +1,12 @@
 import React from 'react';
 import { Button, Container, Row, Col, Card } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
+import { PropTypes } from 'prop-types';
 
-const EmptyScreen = () => {
+const EmptyScreen = props => {
+    let article = props.isActiveAccount ? "Your" : "This";
+    let buttonCopy = props.isActiveAccount ? "Publish First Prediction" : "Publish Your Own Prediction";
+
     return (
         <Container className="mt-4">
             <Row>
@@ -11,10 +15,10 @@ const EmptyScreen = () => {
                     <Card>
                         <Card.Body className="text-center">
                             <Card.Text>
-                                <big>This account has not published any predictions yet.</big>
+                                <big>{article} account has not published any predictions yet.</big>
                             </Card.Text>
                             <LinkContainer to="/new">
-                                <Button>Publish First Prediction</Button>
+                                <Button>{buttonCopy}</Button>
                             </LinkContainer>
                         </Card.Body>
                     </Card>
@@ -22,6 +26,10 @@ const EmptyScreen = () => {
             </Row>
         </Container>
     );
+}
+
+EmptyScreen.propTypes = {
+    isActiveAccount: PropTypes.bool.isRequired,
 }
 
 export default EmptyScreen

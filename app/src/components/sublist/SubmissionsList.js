@@ -104,10 +104,11 @@ class SubmissionsList extends Component {
 
         let selectedSubID = this.urlSubID();
         let submissions = this.props.submissions;
+        let isActiveAccount = (this.props.activeAccount === this.props.account);
 
         if (submissions.length <= 0) {
             return (
-                <EmptyScreen />
+                <EmptyScreen isActiveAccount={isActiveAccount} />
             );
         }
 
@@ -131,7 +132,6 @@ class SubmissionsList extends Component {
         var detailInterface = "";
 
         let hasSelectedSub = selectedSubID.length > 0 && submissions[selectedSubID];
-        let isActiveAccount = (this.props.activeAccount === this.props.account);
 
         if (hasSelectedSub) {
             let revealPath = isActiveAccount ? ("/" + selectedSubID + "/reveal") : null;
