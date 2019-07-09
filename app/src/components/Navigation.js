@@ -10,7 +10,8 @@ const Navigation = props => {
     return (
         <Navbar bg="light">
             <Navbar.Brand href="/">Bankshot</Navbar.Brand>
-            <Nav.Link href="new">New</Nav.Link>
+            <Nav.Link href="/activity">Activity</Nav.Link>
+            <Nav.Link href="/new">New</Nav.Link>
             <Nav.Link href={predictionsLink}>My Predictions</Nav.Link>
         </Navbar>
     );

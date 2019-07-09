@@ -7,6 +7,7 @@ import NotFound from './NotFound';
 import Navigation from './Navigation';
 import SubmissionsContainer from './SubmissionsContainer';
 import Home from './Home';
+import FullList from './full_list/FullList';
 
 class InterfaceComponent extends Component {
 
@@ -21,6 +22,7 @@ class InterfaceComponent extends Component {
           <Navigation account={this.props.accounts[0]} />
           <Switch>
             <Route path="/" component={Home} exact />
+            <Route path="/activity" component={FullList} />
 
             <Route path="/:subid(\d+)/reveal" render={(props) => {
                         return (<SubmissionsContainer {...props}
