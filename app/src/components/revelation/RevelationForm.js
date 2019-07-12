@@ -17,6 +17,7 @@ class RevelationForm extends Component {
 
         this.state = {
             revealInput: "",
+            isPending: false,
         }
 
         this.handleRevealInput = this.handleRevealInput.bind(this);
@@ -38,6 +39,10 @@ class RevelationForm extends Component {
         let encodedRevelation = this.utils.toHex(this.state.revealInput);
 
         this.bankshot.methods.revealSubmission.cacheSend(this.urlSubID(), encodedRevelation);
+
+        this.setState({
+            isPending: true,
+        });
     }
 
     // DATA DERIVATION
@@ -75,7 +80,23 @@ class RevelationForm extends Component {
 
         if (null !== this.props.revelationFor(subID)) {
             let path = "/" + this.urlSubID();
+            // TODO: fix redirect
             return (<Redirect to={path} />);
+        }
+
+        let buttonContent = "Reveal Prediction";
+
+        if (this.state.isPending) {
+            buttonContent = (
+                <span>
+                    <Spinner as="span"
+                            animation="border"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true" />
+                        {" "}Pending...
+                </span>
+            );
         }
 
         let submission = this.props.submissions[subID];
@@ -110,9 +131,9 @@ class RevelationForm extends Component {
                                                 value={this.state.revealInput}
                                                 onChange={this.handleRevealInput} />
                                 <Button variant="primary"
-                                        disabled={!isCorrectRevelation}
+                                        disabled={!isCorrectRevelation || this.state.isPending}
                                         onClick={this.handleRevealClick}>
-                                    Reveal Prediction
+                                    {buttonContent}
                                 </Button>
                             </Form.Group>
                         </Form>
