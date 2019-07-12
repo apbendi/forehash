@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Button, Form, Container, Row, Col, Card } from 'react-bootstrap';
+import { Button, Form, Container, Row, Col, Card, Spinner } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import HashSpan from '../HashSpan';
+import LoadingIndicator from '../LoadingIndicator';
 
 class RevelationForm extends Component {
 
@@ -60,10 +61,17 @@ class RevelationForm extends Component {
 
     render() {
         if (this.props.isLoading) {
-            return (<div>Loading...</div>);
+            return (<LoadingIndicator />);
         }
 
         let subID = this.urlSubID();
+
+        let publicationsCount = this.props.publications.length;
+        let isLoadingPublicationEvents = ( publicationsCount < (parseInt(subID) + 1) );
+
+        if (isLoadingPublicationEvents) {
+            return (<LoadingIndicator />);
+        }
 
         if (null !== this.props.revelationFor(subID)) {
             let path = "/" + this.urlSubID();
@@ -79,7 +87,7 @@ class RevelationForm extends Component {
         let depositString = this.utils.fromWei(submission.deposit, "ether");
 
         return (
-            <Container>
+            <Container className="mt-4">
                 <Row>
                     <Col md="1" sm="0"></Col>
                     <Col md="10" sm="12">
