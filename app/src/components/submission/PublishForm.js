@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Button, Spinner } from 'react-bootstrap';
 
 class PublishForm extends Component {
 
@@ -15,6 +16,20 @@ class PublishForm extends Component {
     }
 
     render() {
+        var buttonContent = "Submit";
+
+        if (this.props.isSubmissionPending) {
+            buttonContent = (
+                <span>
+                    <Spinner as="span"
+                            animation="border"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true" />
+                        {" "}Pending...
+                </span>
+            );
+        }
         return (
             <div>
                 <p>
@@ -29,12 +44,11 @@ class PublishForm extends Component {
                     </div>
                 </div>
 
-                <button type="button" 
-                        className="btn btn-primary"
-                        onClick={this.handleSubmit}
-                        disabled={!this.props.isEnabled} >
-                    Submit
-                </button>
+                <Button variant="primary"
+                        disabled={!this.props.isEnabled && !this.props.isSubmissionPending}
+                        onClick={this.handleSubmit} >
+                    {buttonContent}
+                </Button>
             </div>
         );
     }
@@ -44,6 +58,7 @@ PublishForm.propTyptes = {
     hash: PropTypes.string.isRequired,
     onSubmit: PropTypes.func.isRequired,
     isEnabled: PropTypes.bool.isRequired,
+    isSubmissionPending: PropTypes.bool.isRequired,
 }
 
 export default PublishForm;

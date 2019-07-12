@@ -26,6 +26,7 @@ class SubmissionFlow extends Component {
             depositAmount: "",
             randomSalt: this.generateSalt(),
             confirmError: null,
+            isSubmissionPending: false,
             ethVigKey: this.bankshot.methods.ethVig.cacheCall(),
             minEthDepositKey: this.bankshot.methods.minEthDeposit.cacheCall(),
             submissionsKey: this.bankshot.methods.submissionsForAddress.cacheCall(props.account),
@@ -60,6 +61,7 @@ class SubmissionFlow extends Component {
         if (hashes.includes(predictionHash)) {
             this.setState({
                 flowStep: "SUCCESS",
+                isSubmissionPending: false,
             });
         }
     }
@@ -136,6 +138,10 @@ class SubmissionFlow extends Component {
         let valueSum = this.utils.toBN(ethVig).add(this.utils.toBN(depositWei));
 
         this.bankshot.methods.submitHash.cacheSend(hash, {value: valueSum});
+
+        this.setState({
+            isSubmissionPending: true,
+        });
     }
 
     continueOnSuccess() {
@@ -271,7 +277,8 @@ class SubmissionFlow extends Component {
                     <PublishForm
                         hash={this.predictionHash()}
                         onSubmit={this.publishHash}
-                        isEnabled={isSubmissionEnabled} />
+                        isEnabled={isSubmissionEnabled}
+                        isSubmissionPending={this.state.isSubmissionPending} />
                 );
                 break;
             case "SUCCESS":
