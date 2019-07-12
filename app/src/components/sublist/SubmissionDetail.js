@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Button, Card } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import HashSpan from '../HashSpan';
+import LoadingIndicator from '../LoadingIndicator';
 
 function dateForTimestamp(timestamp) {
     let date = new Date(1000 * parseInt(timestamp));
@@ -10,6 +11,10 @@ function dateForTimestamp(timestamp) {
 }
 
 const SubmissionDetail = (props, context) => {
+    if (null === props.publication) {
+        return (<LoadingIndicator />);
+    }
+
     let utils = context.drizzle.web3.utils;
 
     let depositString = utils.fromWei(props.submission.deposit, 'ether');
@@ -63,7 +68,7 @@ const SubmissionDetail = (props, context) => {
 
 SubmissionDetail.propTypes = {
     submission: PropTypes.object.isRequired,
-    publication: PropTypes.object.isRequired,
+    publication: PropTypes.object,
     revealPath: PropTypes.string,
     revelation: PropTypes.object,
 }
