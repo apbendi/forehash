@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Navbar, Nav } from 'react-bootstrap';
 
 const Navigation = props => {
-    let predictionsLink = "/" + props.account;
+    let predictionsLink = props.account ? "/" + props.account : "/";
 
     return (
         <Navbar bg="light">
@@ -16,7 +16,7 @@ const Navigation = props => {
 }
 
 Navigation.propTypes = {
-    account: PropTypes.string.isRequired,
+    account: PropTypes.string,
 }
 
 export default Navigation
