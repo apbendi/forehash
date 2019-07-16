@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, Form, Container, Row, Col, Card, Spinner } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
+import { drizzleConnect } from 'drizzle-react';
 import HashSpan from '../HashSpan';
 import LoadingIndicator from '../LoadingIndicator';
 
@@ -79,8 +80,7 @@ class RevelationForm extends Component {
         }
 
         if (null !== this.props.revelationFor(subID)) {
-            let path = "/" + this.urlSubID();
-            // TODO: fix redirect
+            let path = "/" + this.props.account + "/" + this.urlSubID();
             return (<Redirect to={path} />);
         }
 
@@ -152,4 +152,10 @@ RevelationForm.propTypes = {
 
 }
 
-export default RevelationForm;
+let mapStateToProps = state => {
+    return {
+        account: state.accounts[0],
+    };
+}
+
+export default drizzleConnect(RevelationForm, mapStateToProps, null);
