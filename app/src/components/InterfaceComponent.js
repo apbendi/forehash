@@ -13,12 +13,15 @@ import LoadingIndicator from './LoadingIndicator';
 import NoWeb3 from './load_status/NoWeb3';
 import InvalidNetwork from './load_status/InvalidNetwork';
 
+function isValidNetwork(networkId) {
+  return networkId === 3 || networkId === 5777 || networkId > 1500000000000;
+}
+
 const InterfaceComponent = props => {
   let isWeb3Ready = props.web3Info.status === "initialized" &&
                               props.web3Info.networkId !== undefined;
 
-  let isInvalidNetwork = isWeb3Ready && !true;
-                          //!isValidNetwork(this.props.web3Info.networkId);
+  let isInvalidNetwork = isWeb3Ready && !isValidNetwork(props.web3Info.networkId);
 
   let isWeb3Failure = props.web3Info.status === "failed" ||
                               // For some reason, web3 reports as initialized in Safari, w/o any
