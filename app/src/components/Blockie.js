@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Image, Card } from 'react-bootstrap';
+import { Image } from 'react-bootstrap';
 
 const Blockie = props => {
 
