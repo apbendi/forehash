@@ -5,11 +5,11 @@ import HashSpan from '../HashSpan';
 const SubmissionCell = props => {
     var className = "list-group-item list-group-item-action flex-column align-items-start";
     var badge = "";
-    var revelationText = "";
+    var badgeBreak = "";
 
     if (props.revelationDate) {
-        badge = (<span className="badge badge-warning badge-pill">Revealed</span>);
-        revelationText = "Revealed: " + props.revelationDate;
+        badge = (<span className="badge badge-warning badge-pill">Revealed {props.revelationDate}</span>);
+        badgeBreak = (<br />);
     }
 
     if (props.isSelected) {
@@ -25,13 +25,10 @@ const SubmissionCell = props => {
                 }
             }>
 
-            <div className="d-flex w-100 justify-content-between">
-                <HashSpan hash={props.hash} />
-                <span>{badge}</span>
-            </div>
+            <HashSpan hash={props.hash} />
+            {badge}{badgeBreak}
             <span>Published: {props.pubDate}</span><br />
             <span>Deposit: {props.deposit} ETH</span><br />
-            <span>{revelationText}</span>
         </a>
     );
 }
