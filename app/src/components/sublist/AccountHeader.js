@@ -6,10 +6,10 @@ import { Col, Row } from 'react-bootstrap';
 const AccountHeader = props => {
     return (
             <Row>
-                <Col sm="1">
+                <Col xs="1">
                     <Blockie account={props.account} />
                 </Col>
-                <Col>
+                <Col className="ml-4">
                     <h5 className="text-dark">{props.account.slice(0, 14) + "..."}</h5>
                     <p className="text-secondary">
                         {props.submissions.length} Predictions ({props.revelations.length} Revealed)
