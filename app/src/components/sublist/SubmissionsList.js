@@ -151,7 +151,7 @@ class SubmissionsList extends Component {
 
         if (isActiveAccount) {
             newButton = (
-                <div className="text-center mt-2">
+                <div className="text-center mt-2 mb-2">
                     <LinkContainer to="/new">
                         <Button>[+] New Prediciton</Button>
                     </LinkContainer>
