@@ -54,6 +54,7 @@ const InterfaceComponent = props => {
   if (null !== failureComp) {
     routes = (
       <Switch>
+        <Route path="/" component={Home} exact />
         <Route path="/" component={failureComp} />
       </Switch>
     );
