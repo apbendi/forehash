@@ -6,6 +6,7 @@ import SubmissionFlow from './submission/SubmissionFlow';
 import RevelationForm from './revelation/RevelationForm';
 import NotFound from './NotFound';
 import Navigation from './Navigation';
+import Footer from './Footer';
 import SubmissionsContainer from './SubmissionsContainer';
 import Home from './Home';
 import FullList from './full_list/FullList';
@@ -90,6 +91,7 @@ const InterfaceComponent = props => {
       <div className="App">
         <Navigation account={props.accounts[0]} />
         {routes}
+        <Footer />
       </div>
     </BrowserRouter>
   );
