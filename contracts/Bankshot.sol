@@ -7,6 +7,7 @@ contract Bankshot {
    uint256 public ethVig;
    uint256 public minEthDeposit;
    uint256 public maxEthDeposit;
+   bool public areSubmissionsLocked;
 
    struct Submission {
        bytes32 sHash;
@@ -36,6 +37,7 @@ contract Bankshot {
         ethVig = _ethVig;
         minEthDeposit = _minEthDeposit;
         maxEthDeposit = 1 ether;
+        areSubmissionsLocked = false;
     }
 
     function minEthPayable() public view returns (uint256) {
@@ -61,7 +63,11 @@ contract Bankshot {
         owner.transfer(_amount);
     }
 
-    function submitHash(bytes32 _hash) public payable paysMin paysUnderMax {
+    function lockSubmissions() public onlyOwner {
+        areSubmissionsLocked = true;
+    }
+
+    function submitHash(bytes32 _hash) public payable paysMin paysUnderMax isUnlocked {
         uint256 deposit = msg.value - ethVig;
         submissions[msg.sender].push(Submission({ sHash: _hash, deposit: deposit, isRevealed: false}));
         vigBalance += (msg.value - deposit);
@@ -109,6 +115,11 @@ contract Bankshot {
     modifier paysUnderMax() {
         uint256 deposit = msg.value - ethVig;
         require(deposit <= maxEthDeposit, 'OVERSIZE_DEPOSIT');
+        _;
+    }
+
+    modifier isUnlocked() {
+        require(!areSubmissionsLocked, 'SUBS_LOCKED');
         _;
     }
 }

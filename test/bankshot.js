@@ -250,6 +250,29 @@ contract("Bankshot", accounts => {
     assert(events.length === 0, "Returned a revelation event for an unrevealed submission");
   });
 
+  it("should not allow a non-owner to lock submission", async () => {
+    let txPromise =  bankshotInstance.lockSubmissions({from: user1Addr});
+
+    await assertRevert(txPromise, "ONLY_OWNER", "Failed to revert non-owner submissions lock");
+  });
+
+  it("should allow the owner to lock submissions", async () => {
+    await bankshotInstance.lockSubmissions({from: ownerAddr});
+    let isLockedResult = await bankshotInstance.areSubmissionsLocked();
+
+    assert(isLockedResult, "Failed to lock submissions");
+  });
+
+  it("should not let a user submit after lock", async () => {
+    let string = "Something to hash";
+    let hash = utils.soliditySha3({type: 'string', value: string});
+    let txValue = addWeiStrings(newVig, newMinEthDeposit);
+
+    let txPromise = bankshotInstance.submitHash(hash, {from: user2Addr, value: txValue});
+
+    await assertRevert(txPromise, 'SUBS_LOCKED', "Failed to revert submission after lock");
+  });
+
   it("should pay a user back for a correct revelation", async () => {
     let string = "Hello Again";
     let initBalance = ( await web3.eth.getBalance(user1Addr) ).toBN();
