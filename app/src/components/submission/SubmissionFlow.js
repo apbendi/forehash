@@ -28,6 +28,7 @@ class SubmissionFlow extends Component {
             isSubmissionPending: false,
             ethVigKey: this.bankshot.methods.ethVig.cacheCall(),
             minEthDepositKey: this.bankshot.methods.minEthDeposit.cacheCall(),
+            maxEthDepositKey: this.bankshot.methods.maxEthDeposit.cacheCall(),
             submissionsKey: this.bankshot.methods.submissionsForAddress.cacheCall(props.account),
         }
 
@@ -45,6 +46,7 @@ class SubmissionFlow extends Component {
         this.methodValueForKey = this.methodValueForKey.bind(this);
         this.ethVig = this.ethVig.bind(this);
         this.minEthDeposit = this.minEthDeposit.bind(this);
+        this.maxEthDeposit = this.maxEthDeposit.bind(this);
         this.minEthPayable = this.minEthPayable.bind(this);
         this.hashes = this.hashes.bind(this);
     }
@@ -83,19 +85,28 @@ class SubmissionFlow extends Component {
         }
 
         let minEthDeposit = this.minEthDeposit();
+        let maxEthDeposit = this.maxEthDeposit();
 
-        if (null === minEthDeposit) {
+        if (null === minEthDeposit || null == maxEthDeposit) {
             return "Loading Contract Parameters";
         }
 
-        let minWeiDeposit = this.utils.toBN(minEthDeposit);
         let weiAmount = this.utils.toBN(this.utils.toWei(ethAmountString));
 
+        let minWeiDeposit = this.utils.toBN(minEthDeposit);
         let isEnough = weiAmount.gte(minWeiDeposit);
 
         if (!isEnough) {
             let ethString = this.utils.fromWei(minEthDeposit, "ether");
             return "The Minimum Deposit Is " + ethString + " ETH";
+        }
+
+        let maxWeiDeposit = this.utils.toBN(maxEthDeposit);
+        let isBelowMax = maxWeiDeposit.gte(weiAmount);
+
+        if (!isBelowMax) {
+            let maxString = this.utils.fromWei(maxEthDeposit, "ether");
+            return "The Maximum Deposit Permitted Is " + maxString + " ETH";
         }
 
         return "";
@@ -187,6 +198,14 @@ class SubmissionFlow extends Component {
         return this.methodValueForKey("minEthDeposit", this.state.minEthDepositKey);
     }
 
+    maxEthDeposit() {
+        if ( !this.isContractInitialized()){
+            return null;
+        }
+
+        return this.methodValueForKey("maxEthDeposit", this.state.maxEthDepositKey);
+    }
+
     minEthPayable() {
         let ethVig = this.ethVig();
         let minEthDeposit = this.minEthDeposit();
@@ -227,8 +246,9 @@ class SubmissionFlow extends Component {
     render() {
         let ethVig  = this.ethVig();
         let minEthDeposit = this.minEthDeposit();
+        let maxEthDeposit = this.maxEthDeposit();
 
-        let isSubmissionEnabled = (ethVig !== null && minEthDeposit !== null)
+        let isSubmissionEnabled = (ethVig !== null && minEthDeposit !== null && maxEthDeposit !== null);
 
         var stepComponent = ("");
         var header = "";
