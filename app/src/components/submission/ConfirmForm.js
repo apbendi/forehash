@@ -28,31 +28,40 @@ class ConfirmForm extends Component {
     }
 
     render() {
+        let isMatchingInput = (this.props.expectedString === this.state.input);
+        let isEnabled = this.props.isEnabled && isMatchingInput;
+
+        var errorText = "";
+
+        if (this.state.input.length > 0 && !isMatchingInput) {
+            errorText = "Input text does not match the expected random characters";
+        }
+
         return (
             <div>
                 <p>
-                Confirm you've backed up your prediction text by entering the random letters that were added to the end. 
+                Confirm you've backed up your prediction text by entering the random letters that were added to the end.
                 You can find them between the curly braces.
                 </p>
 
                 <div className="form-group">
-                    <input type="text" 
+                    <input type="text"
                             className="form-control"
                             placeholder="Random String From Your Backup"
                             value={this.state.randomInput}
                             onChange={this.handleChange}
                             />
-                                        
+
                     <small>
-                        {this.props.error}
+                        {errorText}
                     </small>
 
                     <br />
 
                     <button type="button"
                             className="btn btn-primary"
-                            onClick={this.handleConfirm} 
-                            disabled={!this.props.isEnabled} >
+                            onClick={this.handleConfirm}
+                            disabled={!isEnabled} >
                         Confirm
                     </button>
                 </div>
@@ -63,7 +72,7 @@ class ConfirmForm extends Component {
 
 ConfirmForm.propTypes = {
     onConfirm: PropTypes.func.isRequired,
-    error: PropTypes.string,
+    expectedString: PropTypes.string.isRequired,
     isEnabled: PropTypes.bool.isRequired,
 };
 

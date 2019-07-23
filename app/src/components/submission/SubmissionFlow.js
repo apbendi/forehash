@@ -25,7 +25,6 @@ class SubmissionFlow extends Component {
             predictionText: "",
             depositAmount: "",
             randomSalt: this.generateSalt(),
-            confirmError: null,
             isSubmissionPending: false,
             ethVigKey: this.bankshot.methods.ethVig.cacheCall(),
             minEthDepositKey: this.bankshot.methods.minEthDeposit.cacheCall(),
@@ -119,15 +118,13 @@ class SubmissionFlow extends Component {
     }
 
     backupConfirm(confirmText) {
-        if (confirmText === this.state.randomSalt) {
-            this.setState({
-               flowStep: "PUBLISH",
-            });
-        } else {
-            this.setState({
-                confirmError: "Text entered does not match",
-            });
+        if (confirmText !== this.state.randomSalt) {
+            throw new Error("Invalid confirmation allowed to proceed");
         }
+
+        this.setState({
+            flowStep: "PUBLISH",
+         });
     }
 
     publishHash() {
@@ -264,8 +261,8 @@ class SubmissionFlow extends Component {
 
                 stepComponent = (
                     <ConfirmForm
+                        expectedString={this.state.randomSalt}
                         onConfirm={this.backupConfirm}
-                        error={this.state.confirmError}
                         isEnabled={isSubmissionEnabled} />
                 );
 
