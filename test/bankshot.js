@@ -42,10 +42,12 @@ contract("Bankshot", accounts => {
   let ownerAddr = accounts[0];
   let user1Addr = accounts[1];
   let user2Addr = accounts[2];
+  let user3Addr = accounts[3];
   let initVig = utils.toWei('0.01', 'ether');
   let initMinEthDeposit = utils.toWei('.03', 'ether');
   let newVig = utils.toWei('0.02', 'ether');
   let newMinEthDeposit = utils.toWei('0.05', 'ether');
+  let newMaxEthDeposit = utils.toWei('2.0', 'ether');
   let extraDeposit = utils.toWei('1', 'ether');
 
 
@@ -71,7 +73,7 @@ contract("Bankshot", accounts => {
 
   it("should properly calculate the minimum payable ETH", async() => {
     let callResult = await bankshotInstance.minEthPayable();
-    
+
     let vig = new BN(initVig);
     let deposit = new BN(initMinEthDeposit);
     let expectedValue = vig.add(deposit);
@@ -104,7 +106,14 @@ contract("Bankshot", accounts => {
     let deposit = utils.toWei('0', 'ether');
     let txPromise = bankshotInstance.setMinEthDeposit(deposit, {from: accounts[2]});
 
-    await assertRevert(txPromise, "ONLY_OWNER", "Failed to revert non-owner eth deposit update");
+    await assertRevert(txPromise, "ONLY_OWNER", "Failed to revert non-owner min eth deposit update");
+  });
+
+  it("should not let a non-owner update the eth min deposit", async () => {
+    let deposit = utils.toWei('100', 'ether');
+    let txPromise = bankshotInstance.setMaxEthDeposit(deposit, {from: accounts[2]});
+
+    await assertRevert(txPromise, "ONLY_OWNER", "Failed to revert non-owner max eth deposit update");
   });
 
   it("should calculate the updated minimum payaple ETH", async () => {
@@ -121,7 +130,7 @@ contract("Bankshot", accounts => {
     let string = "Hello World";
     let hash = utils.soliditySha3({type: 'string', value: string});
     let txValue = addWeiStrings(newVig, newMinEthDeposit);
-    
+
     await bankshotInstance.submitHash(hash, {from: user1Addr, value: txValue});
 
     let {hashes, deposits} = await bankshotInstance.submissionsForAddress(user1Addr);
@@ -138,11 +147,46 @@ contract("Bankshot", accounts => {
     assert.equal(events.length, 1, "Didn't find submission event, or found too many");
   });
 
+  it("should not let a user submit a deposit above the max", async () => {
+    let string = "Hello Too Big";
+    let hash = utils.soliditySha3({type: 'string', value: string});
+    let overPay = utils.toWei('1.01', 'ether');
+    let txValue = addWeiStrings(newVig, overPay);
+
+    let txPromise = bankshotInstance.submitHash(hash, {from: user3Addr, value: txValue});
+
+    await assertRevert(txPromise, 'OVERSIZE_DEPOSIT', "Failed to revert submission with oversized deposit");
+  });
+
+  it("should let the owner update the max deposit", async () => {
+    await bankshotInstance.setMaxEthDeposit(newMaxEthDeposit, {from: ownerAddr});
+    let maxResult = await bankshotInstance.maxEthDeposit();
+
+    assert.equal(newMaxEthDeposit.toString(10), maxResult.toString(10), "Failed to update the max ETH deposit");
+  });
+
+  it("should let a user submit after the max deposit is raised", async () => {
+    let string = "Hello Too Big";
+    let hash = utils.soliditySha3({type: 'string', value: string});
+    let overPay = utils.toWei('1.01', 'ether');
+    let txValue = addWeiStrings(newVig, overPay);
+
+    await bankshotInstance.submitHash(hash, {from: user3Addr, value: txValue});
+
+    let {hashes, deposits} = await bankshotInstance.submissionsForAddress(user3Addr);
+
+    assert.equal(hashes.length, 1, "Unexpected hash count for user");
+    assert.equal(hashes[0], hash, "Submitted hash not included in results");
+
+    assert.equal(deposits.length, 1, "Unexpected deposit count for user");
+    assert.equal(deposits[0].toString(10), overPay, "");
+  });
+
   it("should let another user submit a hash with above min payment", async () => {
     let string = "Hello, Cruel World";
     let hash = utils.soliditySha3({type: 'string', value: string});
     let txValue = addWeiStrings(newVig, extraDeposit);
-    
+
     await bankshotInstance.submitHash(hash, {from: user2Addr, value: txValue});
 
     let {hashes, deposits} = await bankshotInstance.submissionsForAddress(user2Addr);
@@ -280,14 +324,14 @@ contract("Bankshot", accounts => {
   });
 
   it("should account for the previous withdrawls from the vig balance", async () => {
-    let withdrawAmount = newVig.toBN().mul("3".toBN()); // The peak vig balance before previous withdraw
+    let withdrawAmount = newVig.toBN().mul("4".toBN()); // The peak vig balance before previous withdraw
     let withdrawTx = bankshotInstance.withdrawVig(withdrawAmount, {from: ownerAddr});
 
     await assertRevert(withdrawTx, 'WITHDRAW_LIMIT', "Failed to account for previous owner vig withdraws")
   });
 
   it("should allow for the owner to withdraw the full vig balance", async () => {
-    let withdrawAmount = newVig.toBN().mul("2".toBN());
+    let withdrawAmount = newVig.toBN().mul("3".toBN());
     let initBalance = ( await web3.eth.getBalance(ownerAddr) ).toBN();
 
     let result =  await bankshotInstance.withdrawVig(withdrawAmount, {from: ownerAddr});

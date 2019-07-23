@@ -6,6 +6,7 @@ contract Bankshot {
    uint256 private vigBalance;
    uint256 public ethVig;
    uint256 public minEthDeposit;
+   uint256 public maxEthDeposit;
 
    struct Submission {
        bytes32 sHash;
@@ -34,6 +35,7 @@ contract Bankshot {
         owner = msg.sender;
         ethVig = _ethVig;
         minEthDeposit = _minEthDeposit;
+        maxEthDeposit = 1 ether;
     }
 
     function minEthPayable() public view returns (uint256) {
@@ -48,6 +50,10 @@ contract Bankshot {
         minEthDeposit = _newMinEthDeposit;
     }
 
+    function setMaxEthDeposit(uint256 _newMaxEthDeposit) public onlyOwner {
+        maxEthDeposit = _newMaxEthDeposit;
+    }
+
     function withdrawVig(uint256 _amount) public onlyOwner {
         require(_amount <= vigBalance, "WITHDRAW_LIMIT");
 
@@ -55,7 +61,7 @@ contract Bankshot {
         owner.transfer(_amount);
     }
 
-    function submitHash(bytes32 _hash) public payable paysMin {
+    function submitHash(bytes32 _hash) public payable paysMin paysUnderMax {
         uint256 deposit = msg.value - ethVig;
         submissions[msg.sender].push(Submission({ sHash: _hash, deposit: deposit, isRevealed: false}));
         vigBalance += (msg.value - deposit);
@@ -97,6 +103,12 @@ contract Bankshot {
 
     modifier paysMin() {
         require(msg.value >= minEthPayable(), 'INSUFFICIENT_FUNDS');
+        _;
+    }
+
+    modifier paysUnderMax() {
+        uint256 deposit = msg.value - ethVig;
+        require(deposit <= maxEthDeposit, 'OVERSIZE_DEPOSIT');
         _;
     }
 }
