@@ -9,6 +9,8 @@ class PredictionForm extends Component {
         this.state = {
             predictionInput: "",
             depositAmount: "",
+            submissionValidationMessage: "",
+            depositValidationMessage: "",
         }
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -16,19 +18,39 @@ class PredictionForm extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    submissionValidationResponse(submissionText) {
+        if (submissionText === "") {
+            return "";
+        }
+
+        if (submissionText.length < 10) {
+            return "Prediction text must be at least 10 characters";
+        }
+
+        if (submissionText.length > 256) {
+            return "Prediction text must be less than 256 characters";
+        }
+
+        return "";
+    }
+
     handleInputChange(event) {
         event.preventDefault();
+        let input = event.target.value;
 
         this.setState({
-            predictionInput: event.target.value,
+            predictionInput: input,
+            submissionValidationMessage: this.submissionValidationResponse(input),
         });
     }
 
     handleDepositChange(event) {
         event.preventDefault();
+        let input = event.target.value;
 
         this.setState({
-           depositAmount: event.target.value, 
+           depositAmount: input,
+           depositValidationMessage: this.props.amountValidator(input),
         });
     }
 
@@ -38,12 +60,11 @@ class PredictionForm extends Component {
     }
 
     render() {
-        let validationResponse = this.props.amountValidator(this.state.depositAmount);
         let isButtonEnabled = this.props.isEnabled &&
-                                this.state.predictionInput.length > 5 &&
+                                this.state.predictionInput.length > 0 &&
                                 this.state.depositAmount.length > 0 &&
-                                validationResponse === "";
-
+                                this.state.depositValidationMessage === "" &&
+                                this.state.submissionValidationMessage === "";
         return (
             <div>
                 <p>
@@ -53,34 +74,37 @@ class PredictionForm extends Component {
                 <div className="form-group">
                         <textarea placeholder="Prediction Text"
                                     className="form-control"
-                                    value={this.state.predictionInput} 
+                                    value={this.state.predictionInput}
                                     onChange={this.handleInputChange} />
+                        <small>
+                            {this.state.submissionValidationMessage}
+                        </small>
                         <br />
 
                         <h4>Deposit Amount</h4>
 
                         <p>
                         Your deposit will be locked with your prediction. It is returned when you reveal it.
-                        It doesn't matter whether it's right or wrong. It's your commitment to revealing your prediction.
+                        It doesn't matter whether it's right or wrong. It's your pledge to revealing your prediction.
                         </p>
 
-                        <input type="number" 
+                        <input type="number"
                                 className="form-control"
-                                step="0.01" 
-                                placeholder="0.1 ETH" 
+                                step="0.01"
+                                placeholder="0.01 ETH"
                                 value={this.state.depositAmount}
                                 onChange={this.handleDepositChange}
                                 />
 
                         <small>
-                            {validationResponse}
+                            {this.state.depositValidationMessage}
                         </small>
 
                         <br />
 
                         <button type="button"
                                 className="btn btn-primary"
-                                disabled={!isButtonEnabled} 
+                                disabled={!isButtonEnabled}
                                 onClick={this.handleSubmit}>
                             Prepare For Submission
                         </button>
