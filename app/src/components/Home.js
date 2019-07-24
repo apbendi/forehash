@@ -25,7 +25,7 @@ class Home extends Component {
                             <div className="ml-4">
                                     <p className="text-muted" style={{float: "left", height: "100%"}}>2</p>
                                     <p className="ml-4 mb-0">
-                                        A commitment to reveal some knowledge in the future by publishing its hash
+                                        A commitment to reveal certain knowledge in the future by publishing its hash
                                         in the present.
                                     </p>
                             </div>
@@ -61,8 +61,8 @@ class Home extends Component {
                             <Card.Body>
                                 <Card.Title><GoLock /> Commit</Card.Title>
                                 <Card.Text>
-                                    Publish a hash of your prediciton to the Ethereum blockchain, along with a
-                                    small deposit.
+                                    Publish a hash of your prediction to the Ethereum blockchain with a
+                                    small, refundable deposit.
                                 </Card.Text>
                             </Card.Body>
                         </Card>
