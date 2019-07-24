@@ -1,6 +1,6 @@
 {
-  "name": "bankshot",
-  "version": "0.1.0",
+  "name": "forehash",
+  "version": "1.0.0",
   "description": "Hash based commit/reveal predictions with skin in the game.",
   "main": "truffle-config.js",
   "directories": {
@@ -11,17 +11,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/apbendi/bankshot.git"
+    "url": "git+https://github.com/apbendi/forehash.git"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/apbendi/bankshot/issues"
+    "url": "https://github.com/apbendi/forehash/issues"
   },
-  "homepage": "https://github.com/apbendi/bankshot",
+  "homepage": "https://github.com/apbendi/forehash",
   "dependencies": {
-    "openzeppelin-solidity": "^2.1.1",
     "truffle-hdwallet-provider": "^1.0.6"
   }
 }
