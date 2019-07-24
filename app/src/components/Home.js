@@ -6,11 +6,6 @@ import { GoMegaphone } from 'react-icons/go';
 
 class Home extends Component {
     render() {
-        let links = [
-            "0x73cC3e91D67613d481cC9cfe11A1679901873656",
-            "0x85faf44B62f01e1969921B66b4c5c4C49FC953Dc",
-        ];
-
         return (
             <Container className="mt-4">
                 <Row className="justify-content-center">

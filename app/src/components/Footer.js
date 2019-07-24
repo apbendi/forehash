@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navbar, Nav } from 'react-bootstrap';
+import { Navbar } from 'react-bootstrap';
 import { GoPerson, GoMarkGithub } from 'react-icons/go';
 import { FaCopyright } from 'react-icons/fa';
 
