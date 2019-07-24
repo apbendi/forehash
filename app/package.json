@@ -1,6 +1,6 @@
 {
-  "name": "bankshot-ui",
-  "version": "0.1.0",
+  "name": "forehash-ui",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "drizzle": "^1.2.4",
