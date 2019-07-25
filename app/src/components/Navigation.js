@@ -7,16 +7,21 @@ const Navigation = props => {
     let predictionsLink = props.account ? "/" + props.account : "/";
 
     return (
-        <Navbar bg="light">
+        <Navbar bg="light" expand="md">
             <Navbar.Brand href="/">
                 <img src={logo}
                         height="30"
                         className="d-inline-block align-top"
                         alt="Forehash Logo" />
             </Navbar.Brand>
-            <Nav.Link href="/activity">Activity</Nav.Link>
-            <Nav.Link href="/new">New</Nav.Link>
-            <Nav.Link href={predictionsLink}>My Predictions</Nav.Link>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse>
+                <Nav className="mr-auto">
+                    <Nav.Link href="/activity" className="text-primary">Activity</Nav.Link>
+                    <Nav.Link href="/new" className="text-primary">New</Nav.Link>
+                    <Nav.Link href={predictionsLink} className="text-primary">My Predictions</Nav.Link>
+                </Nav>
+            </Navbar.Collapse>
         </Navbar>
     );
 }
