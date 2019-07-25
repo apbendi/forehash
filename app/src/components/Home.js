@@ -29,6 +29,7 @@ class Home extends Component {
                                         in the present.
                                     </p>
                             </div>
+                            &nbsp;
                             <p className="mb-1">
                                 <i style={{fontSize: "1.2em"}}>verb</i> <br />
                             </p>
