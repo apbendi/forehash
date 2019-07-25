@@ -1,4 +1,5 @@
 const testnet = require('./testnet-mneumonic');
+const mainnet = require('./mainnet-mneumonic');
 const path = require("path");
 const HDWalletProvider = require("truffle-hdwallet-provider");
 
@@ -16,6 +17,14 @@ module.exports = {
 			provider: () => {
 				return new HDWalletProvider(testnet.mneumonic, "https://ropsten.infura.io/v3/" + testnet.infura_id);
 			},
+		},
+		mainnet: {
+			network_id: '1',
+			gasPrice: 20000000000,
+			timeoutBlocks: 50,
+			provider: () => {
+				return new HDWalletProvider(mainnet.mneumonic, "https://mainnet.infura.io/v3/" + mainnet.infura_id);
+			}
 		}
 	},
 };
