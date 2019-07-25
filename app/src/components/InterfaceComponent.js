@@ -15,7 +15,8 @@ import NoWeb3 from './load_status/NoWeb3';
 import InvalidNetwork from './load_status/InvalidNetwork';
 
 function isValidNetwork(networkId) {
-  return networkId === 3 || networkId === 5777 || networkId > 1500000000000;
+  //return networkId === 1 || networkId === 3 || networkId === 5777 || networkId > 1500000000000;
+  return networkId === 1;
 }
 
 const InterfaceComponent = props => {
