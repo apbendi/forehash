@@ -8,7 +8,7 @@ const Footer = _props => {
         <Navbar bg="light" fixed="bottom" className="footer pb-0">
             <p className="text-secondary pb-0 mb-0 mt-0">
                 <GoPerson /> <span style={{fontSize: ".8em"}}>Built for fun by <a href="https://twitter.com/bendifrancesco" target="_blank" rel="noopener noreferrer">@BenDiFrancesco</a></span><br />
-                <GoMarkGithub /> <span style={{fontSize: ".8em"}}>Code availble on <a href="https://github.com/apbendi/bankshot" target="_blank" rel="noopener noreferrer">GitHub</a></span><br />
+                <GoMarkGithub /> <span style={{fontSize: ".8em"}}>Code available on <a href="https://github.com/apbendi/forehash" target="_blank" rel="noopener noreferrer">GitHub</a></span><br />
                 <FaCopyright /> <span style={{fontSize: ".8em"}}>2019 All Rights Reserved </span><br />
                 <span className="text-muted" style={{fontSize: ".7em"}}>
                     Icon derivative from <a href="https://www.flaticon.com/authors/freepik" target="blank">freepik</a>
