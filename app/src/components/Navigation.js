@@ -4,7 +4,7 @@ import { Navbar, Nav } from 'react-bootstrap';
 import logo from '../full-text-logo.png';
 
 const Navigation = props => {
-    let predictionsLink = props.account ? "/" + props.account : "/";
+    let predictionsLink = props.account ? "/" + props.account : "/0x0000000000000000000000000000000000000000";
 
     return (
         <Navbar bg="light" expand="md">
