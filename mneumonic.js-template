@@ -1,0 +1,7 @@
+const mneumonic = "";
+const infura_id = "";
+
+module.exports = {
+    mneumonic: mneumonic,
+    infura_id: infura_id
+};

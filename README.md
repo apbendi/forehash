@@ -41,7 +41,7 @@ Forehash is built using the Truffle suite of DApp developer tools. In particular
 
 * [Truffle](https://truffleframework.com/truffle) v5.0.10 or later
 * [Solidity](https://solidity.readthedocs.io/en/v0.5.0/installing-solidity.html) v0.5.0
-* [Ganache](https://truffleframework.com/ganache) v2.0.0 or later
+* [Ganache CLI](https://github.com/trufflesuite/ganache-cli) v6.4.4 or later
 
 The frontend is built with React and [Drizzle](https://truffleframework.com/drizzle). In particular, the following development tools are needed:
 
@@ -55,6 +55,13 @@ The frontend is built with React and [Drizzle](https://truffleframework.com/driz
 ```bash
 git clone https://github.com/apbendi/forehash.git
 cd forehash
+```
+
+* Make copies of the `mneumonic.js-template` file for mainnet and Ropsten. (Note that you don't need to populate the constants in this file unless you are deploying to one of these networks, but the files must exist).
+
+```bash
+cp mneumonic.js-template testnet-mneumonic.js
+cp mneumonic.js-template mainnet-mneumonic.js
 ```
 
 * In a seperate terminal, run `ganache-cli`
