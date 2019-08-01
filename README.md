@@ -26,7 +26,7 @@
 
 1. Navigate to [foreshash.com](https://forehash.com) with a web3 enabled browser and click on "New."
 2. Allow Forehash to access web3 when prompted.
-3. Enter the text to your prediction, along with the ETH amounf for your refundable deposit.
+3. Enter the text to your prediction, along with the ETH amount for your refundable deposit.
 4. Backup your prediction text when prompted.
 5. Reveal your prediction at a date of your choosing to get your deposit back.
 
@@ -34,7 +34,7 @@ Alternatively, if you are writing a smart contract that integrates with Forehash
 
 ## Contract Deployments
 
-Forehash is availbe on mainnet, and also deployed on the Ropsten testnet.
+Forehash is available on mainnet, and also deployed on the Ropsten testnet.
 
 Network | Contract Address
 ------- | -------------| 
@@ -72,7 +72,7 @@ cp mneumonic.js-template testnet-mneumonic.js
 cp mneumonic.js-template mainnet-mneumonic.js
 ```
 
-* In a seperate terminal, run `ganache-cli`
+* In a separate terminal, run `ganache-cli`
 * Migrate the contracts using Truffle
 
 ```bash
