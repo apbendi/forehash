@@ -1,8 +1,17 @@
-# Forehash 🔮
+<div align="center">
+	<img width="400" src="app/src/full-text-logo.png" alt="Forehash Logo">
+	<br>
+	<br>
+</div>
 
-Accountable predictions using bonded commit-reveal on the Ethereum blockchain. Deployed for use at [forehash.com](https://forehash.com).
+<p align="center">
+	<b>Accountable predictions using bonded commit-reveal on the Ethereum blockchain.</b>
+</p>
 
-Built by [@BenDiFrancesco](https://twitter.com/BenDiFrancesco).
+<p align="center">
+	🚀 <a href="https://forehash.com">www.forehash.com</a>
+	👷 <a href="https://twitter.com/BenDiFrancesco">@BenDiFrancesco</a>
+</p>
 
 ## Usage
 
