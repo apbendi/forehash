@@ -20,8 +20,7 @@
 * A web3 enabled browser or browser extension
 	* [Brave](https://brave.com/) - Desktop Browser w/ MetaMask by default
 	* [MetaMask](https://metamask.io/) - Extension for Chrome and Firefox
-	* [Cipher](https://www.cipherbrowser.com/) - Web3 enabled mobile browser
-* Some Ether to pay for gas fees
+	* [MetaMask Mobile](https://mobile.metamask.io/) - web3 enabled browser for iOS and Android (Beta)
 
 ### Instructions
 
