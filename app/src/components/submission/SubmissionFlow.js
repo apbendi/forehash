@@ -32,8 +32,6 @@ class SubmissionFlow extends Component {
             submissionsKey: this.bankshot.methods.submissionsForAddress.cacheCall(props.account),
         }
 
-        this.validationResponseForDeposit = this.validationResponseForDeposit.bind(this);
-
         this.predictionCallback = this.predictionCallback.bind(this);
         this.backupContinue = this.backupContinue.bind(this);
         this.backupConfirm = this.backupConfirm.bind(this);
@@ -77,39 +75,6 @@ class SubmissionFlow extends Component {
                     .toString(36)
                     .replace(/[^a-z]+/g, '')
                     .substr(0, length)
-    }
-
-    validationResponseForDeposit(ethAmountString) {
-        if (ethAmountString.length < 1) {
-            return "";
-        }
-
-        let minEthDeposit = this.minEthDeposit();
-        let maxEthDeposit = this.maxEthDeposit();
-
-        if (null === minEthDeposit || null == maxEthDeposit) {
-            return "Loading Contract Parameters";
-        }
-
-        let weiAmount = this.utils.toBN(this.utils.toWei(ethAmountString));
-
-        let minWeiDeposit = this.utils.toBN(minEthDeposit);
-        let isEnough = weiAmount.gte(minWeiDeposit);
-
-        if (!isEnough) {
-            let ethString = this.utils.fromWei(minEthDeposit, "ether");
-            return "The Minimum Deposit Is " + ethString + " ETH";
-        }
-
-        let maxWeiDeposit = this.utils.toBN(maxEthDeposit);
-        let isBelowMax = maxWeiDeposit.gte(weiAmount);
-
-        if (!isBelowMax) {
-            let maxString = this.utils.fromWei(maxEthDeposit, "ether");
-            return "The Maximum Deposit Permitted Is " + maxString + " ETH";
-        }
-
-        return "";
     }
 
     // FLOW STEP CALLBACKS
@@ -259,7 +224,8 @@ class SubmissionFlow extends Component {
 
                 stepComponent = (
                     <PredictionForm
-                        amountValidator={this.validationResponseForDeposit}
+                        minEthDeposit={minEthDeposit}
+                        maxEthDeposit={maxEthDeposit}
                         onSubmit={this.predictionCallback}
                         isEnabled={isSubmissionEnabled} />
                 );

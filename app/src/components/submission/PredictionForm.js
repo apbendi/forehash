@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 
 class PredictionForm extends Component {
 
-    constructor(props) {
+    constructor(props, context) {
         super(props);
+
+        this.utils = context.drizzle.web3.utils;
 
         this.state = {
             predictionInput: "",
@@ -13,6 +15,7 @@ class PredictionForm extends Component {
             depositValidationMessage: "",
         }
 
+        this.depositValidationResponse = this.depositValidationResponse.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleDepositChange = this.handleDepositChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -34,8 +37,42 @@ class PredictionForm extends Component {
         return "";
     }
 
+    depositValidationResponse(ethAmountString) {
+        if (ethAmountString.length < 1) {
+            return "";
+        }
+
+        let minEthDeposit = this.props.minEthDeposit;
+        let maxEthDeposit = this.props.maxEthDeposit;
+
+        if (null === minEthDeposit || null == maxEthDeposit) {
+            return "Loading Contract Parameters";
+        }
+
+        let weiAmount = this.utils.toBN(this.utils.toWei(ethAmountString));
+
+        let minWeiDeposit = this.utils.toBN(minEthDeposit);
+        let isEnough = weiAmount.gte(minWeiDeposit);
+
+        if (!isEnough) {
+            let ethString = this.utils.fromWei(minEthDeposit, "ether");
+            return "The Minimum Deposit Is " + ethString + " ETH";
+        }
+
+        let maxWeiDeposit = this.utils.toBN(maxEthDeposit);
+        let isBelowMax = maxWeiDeposit.gte(weiAmount);
+
+        if (!isBelowMax) {
+            let maxString = this.utils.fromWei(maxEthDeposit, "ether");
+            return "The Maximum Deposit Permitted Is " + maxString + " ETH";
+        }
+
+        return "";
+    }
+
     handleInputChange(event) {
         event.preventDefault();
+
         let input = event.target.value;
 
         this.setState({
@@ -46,11 +83,12 @@ class PredictionForm extends Component {
 
     handleDepositChange(event) {
         event.preventDefault();
+
         let input = event.target.value;
 
         this.setState({
            depositAmount: input,
-           depositValidationMessage: this.props.amountValidator(input),
+           depositValidationMessage: this.depositValidationResponse(input),
         });
     }
 
@@ -114,8 +152,13 @@ class PredictionForm extends Component {
     }
 }
 
+PredictionForm.contextTypes = {
+    drizzle: PropTypes.object,
+}
+
 PredictionForm.propTypes = {
-    amountValidator: PropTypes.func.isRequired,
+    minEthDeposit: PropTypes.string,
+    maxEthDeposit: PropTypes.string,
     onSubmit: PropTypes.func.isRequired,
     isEnabled: PropTypes.bool.isRequired,
 }
