@@ -276,8 +276,9 @@ class SubmissionFlow extends Component {
 
                 break;
             case "REDIRECT":
+                let redirectURL = "/" + this.account;
                 stepComponent = (
-                    <Redirect to="/" />
+                    <Redirect to={redirectURL} />
                 );
 
                 break;
