@@ -17,7 +17,11 @@ import InvalidNetwork from './load_status/InvalidNetwork';
 function isValidNetwork(networkId) {
 
   return networkId === 1 ||
-            (window.location.href.includes("localhost") && networkId > 1500000000000);
+                      (
+                        ( window.location.href.includes("localhost") ||
+                          window.location.href.includes("127.0.0.1") )
+                                              && networkId > 1500000000000
+                      );
 }
 
 const InterfaceComponent = props => {
