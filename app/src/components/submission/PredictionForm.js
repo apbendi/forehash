@@ -103,6 +103,14 @@ class PredictionForm extends Component {
                                 this.state.depositAmount.length > 0 &&
                                 this.state.depositValidationMessage === "" &&
                                 this.state.submissionValidationMessage === "";
+
+        var placeholder = "ETH";
+
+        if (this.props.minEthDeposit) {
+            let ethMin = this.utils.fromWei(this.props.minEthDeposit, "ether");
+            placeholder = ethMin + " ETH";
+        }
+
         return (
             <div>
                 <p>
@@ -129,7 +137,7 @@ class PredictionForm extends Component {
                         <input type="number"
                                 className="form-control"
                                 step="0.01"
-                                placeholder="0.01 ETH"
+                                placeholder={placeholder}
                                 value={this.state.depositAmount}
                                 onChange={this.handleDepositChange}
                                 />
