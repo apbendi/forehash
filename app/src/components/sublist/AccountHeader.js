@@ -6,7 +6,7 @@ import { Col, Row } from 'react-bootstrap';
 const AccountHeader = props => {
     return (
             <Row>
-                <Col xs="1">
+                <Col xs="2" sm="1">
                     <Blockie account={props.account} />
                 </Col>
                 <Col className="ml-4">
