@@ -3,3 +3,4 @@ build
 app/src/contracts
 .DS_Store
 *-mneumonic.js
+app/deploy.sh
