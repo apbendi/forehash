@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import { drizzleConnect } from 'drizzle-react';
 import { Redirect } from 'react-router-dom';
-import { Container } from 'react-bootstrap';
+import { Container, Col, Row } from 'react-bootstrap';
 import PredictionForm from './PredictionForm';
 import BackupPrediction from './BackupPrediction';
 import ConfirmForm from './ConfirmForm';
@@ -287,8 +287,12 @@ class SubmissionFlow extends Component {
 
         return (
             <Container className="mt-3">
-                <h2>{header}</h2>
-                {stepComponent}
+                <Row className="justify-content-center">
+                    <Col xs="12" md="9">
+                        <h2>{header}</h2>
+                        {stepComponent}
+                    </Col>
+                </Row>
             </Container>
         )
     }
