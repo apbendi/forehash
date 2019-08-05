@@ -30,13 +30,19 @@ class FullList extends Component {
     }
 
     render() {
-        let cards = this.publications().map( (publication, index) => {
+        let publications = this.publications();
+        let revelations = this.revelations();
+
+        let cards = publications.map( (publication, index) => {
             return (
                 <Col md="4" className="mt-3" key={index}>
                     <PublicationCard publicationValues={publication.returnValues} />
                 </Col>
             );
         });
+
+        let predictionsVerb = (publications.length === 1) ? "has" : "have";
+        let revelationsVerb = (revelations.length === 1) ? "has" : "have";
 
         return (
             <Container className="mt-4">
@@ -45,8 +51,8 @@ class FullList extends Component {
                         <Card>
                             <Card.Header>Global Bankshot Statistics</Card.Header>
                             <Card.Body>
-                                <Card.Title><big>{this.publications().length} predictions have been published</big></Card.Title>
-                                <Card.Subtitle className="text-secondary">{this.revelations().length} have been revealed</Card.Subtitle>
+                                <Card.Title><big>{publications.length} predictions {predictionsVerb} been published</big></Card.Title>
+                                <Card.Subtitle className="text-secondary">{revelations.length} {revelationsVerb} been revealed</Card.Subtitle>
                             </Card.Body>
                         </Card>
                     </Col>
