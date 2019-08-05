@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Container, Row, Col } from 'react-bootstrap';
-import { GoLinkExternal, GoLink } from 'react-icons/go';
+import { GoLinkExternal } from 'react-icons/go';
 
 const NoWeb3 = () => {
     return (
