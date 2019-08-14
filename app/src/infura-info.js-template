@@ -1,0 +1,3 @@
+let infuraId = "";
+
+export default infuraId;

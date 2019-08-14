@@ -1,18 +1,21 @@
 import Bankshot from "./contracts/Bankshot.json";
+import infuraId from "./infura-info.js";
+
+let fallbackURL = "wss://ropsten.infura.io/ws/v3/" + infuraId;
 
 const options = {
   web3: {
     block: false,
     fallback: {
       type: "ws",
-      url: "ws://127.0.0.1:9545",
+      url: fallbackURL,
     },
   },
   contracts: [Bankshot],
   events: {
     Bankshot: [
                 {
-                  eventName: "Revelation", 
+                  eventName: "Revelation",
                   eventOptions: {fromBlock: 0},
                 },
                 {

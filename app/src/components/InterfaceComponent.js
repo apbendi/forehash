@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { drizzleConnect } from 'drizzle-react';
 import SubmissionsList from './sublist/SubmissionsList';
@@ -20,11 +21,14 @@ function isValidNetwork(networkId) {
                       (
                         ( window.location.href.includes("localhost") ||
                           window.location.href.includes("127.0.0.1") )
-                                              && networkId > 1500000000000
+                                              && (networkId > 1500000000000 || networkId === 3)
                       );
 }
 
-const InterfaceComponent = props => {
+const InterfaceComponent = (props, context) => {
+
+  console.log(context.drizzle.web3);
+
   let isWeb3Ready = props.web3Info.status === "initialized" &&
                               props.web3Info.networkId !== undefined;
 
@@ -111,5 +115,9 @@ const mapStateToProps = state => {
       web3Info: state.web3,
   };
 };
+
+InterfaceComponent.contextTypes = {
+  drizzle: PropTypes.object,
+}
 
 export default drizzleConnect(InterfaceComponent, mapStateToProps);

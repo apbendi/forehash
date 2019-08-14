@@ -3,4 +3,5 @@ build
 app/src/contracts
 .DS_Store
 *-mneumonic.js
+infura-info.js
 app/deploy.sh

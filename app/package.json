@@ -3,9 +3,9 @@
   "version": "1.0.3",
   "private": true,
   "dependencies": {
-    "drizzle": "^1.2.4",
-    "drizzle-react": "^1.2.0",
-    "drizzle-react-components": "^1.2.1",
+    "drizzle": "apbendi/drizzle#build",
+    "drizzle-react": "^1.3.0",
+    "drizzle-react-components": "^1.4.0",
     "react": "^16.7.0",
     "react-bootstrap": "^1.0.0-beta.9",
     "react-dom": "^16.7.0",
