@@ -1,7 +1,15 @@
 import Bankshot from "./contracts/Bankshot.json";
 import infuraId from "./infura-info.js";
 
-let fallbackURL = "wss://ropsten.infura.io/ws/v3/" + infuraId;
+
+var fallbackURL = "";
+let isLocalDev = window.location.href.includes("localhost") || window.location.href.includes("127.0.0.1");
+
+if (isLocalDev) {
+  fallbackURL = "ws://127.0.0.1:8545";
+} else {
+  fallbackURL = "wss://ropsten.infura.io/ws/v3/" + infuraId;
+}
 
 const options = {
   web3: {
