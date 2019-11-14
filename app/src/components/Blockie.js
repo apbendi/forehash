@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Image } from 'react-bootstrap';
+//import { Image } from 'react-bootstrap';
 
-const Blockie = props => {
+const Blockie = _props => {
 
     return (
-        <Image src={"https://eth.vanity.show/" + props.account}
-                alt={"Identicon of ether address" + props.account}
-                roundedCircle />
+        <span></span>
+        // <Image src={"https://eth.vanity.show/" + props.account}
+        //         alt={"Identicon of ether address" + props.account}
+        //         roundedCircle />
     );
 }
 
