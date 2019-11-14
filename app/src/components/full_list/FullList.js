@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { drizzleConnect } from 'drizzle-react';
+import { drizzleConnect } from '@drizzle/react-plugin'
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import PublicationCard from './PublicationCard';
 

@@ -1,5 +1,5 @@
 import InterfaceComponent from "./InterfaceComponent";
-import { drizzleConnect } from "drizzle-react";
+import { drizzleConnect } from "@drizzle/react-plugin";
 
 const mapStateToProps = state => {
   return {

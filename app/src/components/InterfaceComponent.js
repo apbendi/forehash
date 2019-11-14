@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { drizzleConnect } from 'drizzle-react';
+import { drizzleConnect } from '@drizzle/react-plugin';
 import SubmissionsList from './sublist/SubmissionsList';
 import SubmissionFlow from './submission/SubmissionFlow';
 import RevelationForm from './revelation/RevelationForm';

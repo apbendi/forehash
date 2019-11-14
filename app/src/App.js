@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { DrizzleProvider } from "drizzle-react";
+import { DrizzleProvider } from "@drizzle/react-plugin"
 import "./App.css";
 import drizzleOptions from "./drizzleOptions";
 import InterfaceContainer from "./components/InterfaceContainer";

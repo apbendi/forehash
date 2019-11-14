@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, Form, Container, Row, Col, Card, Spinner } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
-import { drizzleConnect } from 'drizzle-react';
+import { drizzleConnect } from '@drizzle/react-plugin';
 import HashSpan from '../HashSpan';
 import LoadingIndicator from '../LoadingIndicator';
 

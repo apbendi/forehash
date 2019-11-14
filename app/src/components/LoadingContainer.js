@@ -1,5 +1,5 @@
 import React from 'react';
-import { drizzleConnect } from 'drizzle-react';
+import { drizzleConnect } from '@drizzle/react-plugin';
 
 const LoadingContainer = props => {
     let isWeb3Ready = props.web3Info.status === "initialized" &&

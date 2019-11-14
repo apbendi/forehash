@@ -12,7 +12,7 @@ const options = {
   events: {
     Bankshot: [
                 {
-                  eventName: "Revelation", 
+                  eventName: "Revelation",
                   eventOptions: {fromBlock: 0},
                 },
                 {

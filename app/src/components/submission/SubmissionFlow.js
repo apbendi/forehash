@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
-import { drizzleConnect } from 'drizzle-react';
+import { drizzleConnect } from '@drizzle/react-plugin';
 import { Redirect } from 'react-router-dom';
 import { Container, Col, Row } from 'react-bootstrap';
 import PredictionForm from './PredictionForm';
