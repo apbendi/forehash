@@ -17,7 +17,7 @@ const PublicationCard = props => {
             <Card>
                 <Card.Body>
                 <Container>
-                    <Row>
+                    {/* <Row>
                         <Col xs="12">
                             <Image src={"https://eth.vanity.show/" + account}
                                     style={{
@@ -27,7 +27,7 @@ const PublicationCard = props => {
                                     roundedCircle
                             />
                         </Col>
-                    </Row>
+                    </Row> */}
                     <Row className="mt-3">
                         <Col xs="12">
                             <center>
