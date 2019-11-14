@@ -27,8 +27,6 @@ function isValidNetwork(networkId) {
 
 const InterfaceComponent = (props, context) => {
 
-  console.log(context.drizzle.web3);
-
   let isWeb3Ready = props.web3Info.status === "initialized" &&
                               props.web3Info.networkId !== undefined;
 

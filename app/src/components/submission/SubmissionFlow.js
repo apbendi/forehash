@@ -20,6 +20,8 @@ class SubmissionFlow extends Component {
         this.utils = context.drizzle.web3.utils;
         this.bankshot = context.drizzle.contracts.Bankshot;
 
+        // If account is undefined, we can just render a no-web3 majigger
+
         this.state = {
             flowStep: "PREDICTION",
             predictionText: "",
@@ -209,6 +211,8 @@ class SubmissionFlow extends Component {
     // RENDER
 
     render() {
+        console.log(this.props.account);
+
         let ethVig  = this.ethVig();
         let minEthDeposit = this.minEthDeposit();
         let maxEthDeposit = this.maxEthDeposit();
