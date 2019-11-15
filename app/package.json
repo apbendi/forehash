@@ -7,6 +7,7 @@
     "@drizzle/react-plugin": "^1.5.1",
     "@drizzle/store": "^1.5.1",
     "browserslist": "^4.7.2",
+    "ethereum-blockies-base64": "^1.0.2",
     "react": "^16.11.0",
     "react-bootstrap": "^1.0.0-beta.14",
     "react-dom": "^16.11.0",
