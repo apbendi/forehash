@@ -15,6 +15,10 @@ class Blockie extends Component {
     render() {
         return (
             <Image src={this.state.blockieData}
+                style={{
+                    margin: "auto",
+                    display: "block",
+                }}
                 alt={"Identicon of ether address" + this.props.account}
                 fluid
                 roundedCircle />

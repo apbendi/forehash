@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Container, Col, Row, Card, Image, Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
+import Blockie from '../Blockie';
 
 function dateForTimestamp(timestamp) {
     let date = new Date(1000 * parseInt(timestamp));
@@ -17,17 +18,11 @@ const PublicationCard = props => {
             <Card>
                 <Card.Body>
                 <Container>
-                    {/* <Row>
+                    <Row>
                         <Col xs="12">
-                            <Image src={"https://eth.vanity.show/" + account}
-                                    style={{
-                                        margin: "auto",
-                                        display: "block",
-                                    }}
-                                    roundedCircle
-                            />
+                            <Blockie account={account} />
                         </Col>
-                    </Row> */}
+                    </Row>
                     <Row className="mt-3">
                         <Col xs="12">
                             <center>
