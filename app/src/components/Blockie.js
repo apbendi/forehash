@@ -1,14 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-//import { Image } from 'react-bootstrap';
+import makeBlockie from 'ethereum-blockies-base64';
+import { Image } from 'react-bootstrap';
 
-const Blockie = _props => {
+const Blockie = props => {
 
     return (
-        <span></span>
-        // <Image src={"https://eth.vanity.show/" + props.account}
-        //         alt={"Identicon of ether address" + props.account}
-        //         roundedCircle />
+        <Image src={makeBlockie(props.account)}
+                alt={"Identicon of ether address" + props.account}
+                fluid
+                roundedCircle />
     );
 }
 

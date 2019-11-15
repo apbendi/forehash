@@ -6,10 +6,9 @@ import { Col, Row } from 'react-bootstrap';
 const AccountHeader = props => {
     return (
             <Row>
-                {/* <Col xs="2" sm="1">
+                <Col xs="2" sm="1">
                     <Blockie account={props.account} />
-                </Col> */}
-                {/* <Col className="ml-4"> */}
+                </Col>
                 <Col>
                     <h5 className="text-dark">{props.account.slice(0, 14) + "..."}</h5>
                     <p className="text-secondary">
