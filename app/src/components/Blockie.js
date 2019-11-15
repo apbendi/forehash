@@ -1,16 +1,25 @@
-import React from 'react';
+import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import makeBlockie from 'ethereum-blockies-base64';
 import { Image } from 'react-bootstrap';
 
-const Blockie = props => {
+class Blockie extends Component {
+    constructor(props) {
+        super(props);
 
-    return (
-        <Image src={makeBlockie(props.account)}
-                alt={"Identicon of ether address" + props.account}
+        this.state = {
+            blockieData: makeBlockie(props.account),
+        };
+    }
+
+    render() {
+        return (
+            <Image src={this.state.blockieData}
+                alt={"Identicon of ether address" + this.props.account}
                 fluid
                 roundedCircle />
-    );
+        );
+    }
 }
 
 Blockie.propTypes = {
